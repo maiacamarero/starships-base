@@ -5,4 +5,8 @@ public class Damage {
 
     public Damage() {
     }
+
+    public int getValue() {
+        return value;
+    }
 }

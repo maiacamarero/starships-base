@@ -7,7 +7,7 @@ public class Collidable {
     private final int rotationInDegrees;
     private final Health health;
     private final Damage damage;
-    private final CollidableType collidableType; //ship weapon bullet
+    private final CollidableType collidableType; //ship asteroid bullet tambien sirve como id
 
     public Collidable(Vector position, Vector speed, Vector acelec, int rotationInDegrees, Health health, Damage damage, CollidableType collidableType) {
         this.position = position;
@@ -61,5 +61,17 @@ public class Collidable {
 
     public int getRotationInDegrees() {
         return rotationInDegrees;
+    }
+
+    public CollidableType getCollidableType() {
+        return collidableType;
+    }
+
+    public Health getHealth() {
+        return health;
+    }
+
+    public Damage getDamage() {
+        return damage;
     }
 }

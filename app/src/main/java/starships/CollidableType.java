@@ -1,4 +1,5 @@
 package starships;
 
-public class CollidableType {
+public enum CollidableType {
+    SHIP, ASTEROID, BULLET
 }
