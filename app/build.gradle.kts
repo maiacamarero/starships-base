@@ -23,6 +23,7 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("edu.austral.ingsis.starships:starships-ui:1.0.0")
+    testImplementation("org.testng:testng:7.1.0")
 }
 
 javafx {

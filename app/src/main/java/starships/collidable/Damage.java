@@ -1,4 +1,4 @@
-package starships;
+package starships.collidable;
 
 public class Damage {
     private int value;

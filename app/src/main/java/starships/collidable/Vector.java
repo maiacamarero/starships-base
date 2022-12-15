@@ -1,4 +1,4 @@
-package starships;
+package starships.collidable;
 
 public class Vector {
     private final int x;
