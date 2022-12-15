@@ -7,14 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Configuration {
-    public List<String> getLines(String s){
+    public static List<String> getLines(String directory) {
         List<String> lines = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(s))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(directory))){
             String line;
-            while ((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 lines.add(line);
             }
-        }catch (IOException e){
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return lines;

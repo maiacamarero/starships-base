@@ -1,32 +1,30 @@
 package starships;
 
 import javafx.scene.input.KeyCode;
-import starships.Factories.AsteroidFactory;
-import starships.Factories.BulletFactory;
-import starships.Factories.PlayerFactory;
-import starships.Factories.ShipFactory;
+import starships.factories.AsteroidFactory;
+import starships.factories.BulletFactory;
+import starships.factories.PlayerFactory;
+import starships.factories.ShipFactory;
 import starships.collidable.*;
 
 import java.util.*;
 
 public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno que ya fue guardado)
-                    // shoot, move y rotate ship, handle coliision, update, pause or resumeGame
-
-    private List<Colisionable> elements;
-    private List<Player> players;
+                    // shoot, move y rotate ship, handle collision, update, pause or resumeGame
     private boolean isPaused;
     private boolean finished;
     private final GameConfiguration config;
     private State state;
-    private Map<String, Integer> points;
-    private Setup setup;
-    private List<String> deadElements;
+    private final Map<String, Integer> points;
+    private final Setup setup;
+    private final List<String> deadElements;
 
     public Game() {
         this.config = new GameConfiguration();
         this.finished = false;
         this.points = new HashMap<>();
         this.setup = new Setup();
+        this.deadElements = new ArrayList<>();
     }
 
     public void start(boolean resumeGame){
@@ -38,7 +36,7 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
     }
 
     private void loadPoints() {
-        for (Player player : players) {
+        for (Player player : getPlayers()) {
             points.put(player.getPlayerId(), 0);
         }
     }
@@ -64,7 +62,7 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
     public void shoot(String shipID){
         List<Colisionable> newElements = new ArrayList<>();
         Ship bulletsShip = null;
-        for (Colisionable element : elements) {
+        for (Colisionable element : getElements()) {
             if (Objects.equals(element.getId(), shipID)){
                 bulletsShip = (Ship) element;
                 if (bulletsShip.canShoot()){
@@ -108,7 +106,7 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
         refreshState(newElements, getNewPlayers());
     }
 
-    private List<Colisionable> getElements() {
+    public List<Colisionable> getElements() {
         if (state == null){
             return null;
         }else return state.getElements();
@@ -151,7 +149,7 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
         }
     }
 
-    private void updateView(){
+    public void updateView(){
         if (!isPaused && state != null){
             boolean hasShip = false;
             List<Colisionable> newElements = new ArrayList<>();
@@ -202,7 +200,7 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
         }
     }
 
-    public void pauseOrResumeGame(){
+    public void pauseUnpauseGame(){
         this.isPaused = !isPaused;
     }
 
@@ -216,6 +214,10 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
 
     public List<String> getDeadElements() {
         return deadElements;
+    }
+
+    public boolean isPaused() {
+        return isPaused;
     }
 }
 

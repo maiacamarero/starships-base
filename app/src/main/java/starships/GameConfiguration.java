@@ -12,7 +12,7 @@ public class GameConfiguration extends Configuration{
     private final int amountOfLives;
 
     public GameConfiguration() {
-        List<String> lines = getLines("app\\src\\main\\java\\game\\config\\GameConfiguration");
+        List<String> lines = getLines("/Users/maiacamarero/IdeaProjects/starships-base/app/src/main/java/starships/txtFiles/GameConfiguration");
         Map<String, String> map = getMap(lines);
         this.amountOfPlayers = Integer.parseInt(map.get("amountOfPlayers"));
         this.keyboardConfig = getKeyBoardMap(map.get("keyBoardSettings"));
@@ -34,16 +34,20 @@ public class GameConfiguration extends Configuration{
         return switch (s){
             case "W" -> KeyCode.W;
             case "S" -> KeyCode.S;
+            case "A" -> KeyCode.A;
+            case "D" -> KeyCode.D;
+            case "Q" -> KeyCode.Q;
+            case "E" -> KeyCode.E;
             case "SPACE" -> KeyCode.SPACE;
+            case "UP" -> KeyCode.UP;
+            case "DOWN" -> KeyCode.DOWN;
             case "LEFT" -> KeyCode.LEFT;
             case "RIGHT" -> KeyCode.RIGHT;
-            case "T" -> KeyCode.T;
-            case "G" -> KeyCode.G;
-            case "L" -> KeyCode.L;
-            case "J" -> KeyCode.J;
-            default -> KeyCode.K;
-        };
-    }
+            case "NUMPAD1" -> KeyCode.NUMPAD1;
+            case "NUMPAD2" -> KeyCode.NUMPAD2;
+            case "ENTER" -> KeyCode.ENTER;
+            default -> KeyCode.M;
+        };    }
 
     private Map<String, String> getMap(List<String> lines) {
         Map<String, String> mapToReturn = new HashMap<>();

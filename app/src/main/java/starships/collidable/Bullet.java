@@ -7,7 +7,7 @@ public class Bullet extends Colisionable {
 
     private BulletType bulletType;
 
-    public Bullet(String id, Vector position, int rotationInDegrees, int height, int width, int direction,  String shipID, int damage, BulletType bulletType) {
+    public Bullet(String id, Position position, int rotationInDegrees, int height, int width, int direction, String shipID, int damage, BulletType bulletType) {
         super(id, CollidableType.BULLET, position, rotationInDegrees, height, width, CollidableShape.RECTANGULAR, direction);
         this.ship = shipID;
         this.damage = damage;
@@ -37,7 +37,7 @@ public class Bullet extends Colisionable {
     private Bullet move() {
         int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection() / 360));
         int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection() / 360));
-        Vector newPosition = new Vector(newX, newY);
+        Position newPosition = new Position(newX, newY);
         return new Bullet(getId(), newPosition,getRotationInDegrees(),getHeight(),getWidth(),getDirection(),ship, damage, bulletType);
     }
 

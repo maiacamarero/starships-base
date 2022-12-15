@@ -26,11 +26,11 @@ public class Setup extends Configuration{
     }
 
     private String getStringToWritePlayer(Player player) {
-        return "id:" + player.getPlayerId() + ";points:" + player.getPoints() + ";lives:" + player.getHealth() ;
+        return "id:" + player.getPlayerId() + ";points:" + player.getPoints() + ";lives:" + player.getHealth().getValue() ;
     }
 
     private String getDirectory() {
-        return "app\\src\\main\\java\\starships\\configuration";
+        return "/Users/maiacamarero/IdeaProjects/starships-base/app/src/main/java/starships/txtFiles/config";
     }
 
     private String getStringToWriteColisionable(Colisionable colisionable) {
@@ -68,7 +68,6 @@ public class Setup extends Configuration{
             break;
         }
         List<Colisionable> elements = getSavedElements(stringElements);
-        assert stringPlayers != null;
         List<Player> players = getSavedPlayers(stringPlayers);
         return new State(elements, players);
     }
@@ -99,27 +98,27 @@ public class Setup extends Configuration{
                 String playerId = (String) transform(s[11]);
                 double boost = (double) transform(s[12]);
                 String bulletType = (String) transform(s[13]);
-                Vector position = new Vector(xPosition, yPosition);
-                return new Ship(id, position, rotation, height, width, playerId, lastBulletShot, direction, boost, getBulletType(bulletType));
+                Position position = new Position(xPosition, yPosition);
+                return new Ship(id, position, rotation, height, width, playerId, lastBulletShot, direction, boost, getBulletType());
             }
             case "ASTEROID" -> {
                 boolean clockwise = (boolean) transform(s[10]);
                 int initialHealth = (int) transform(s[11]);
                 int currentHealth = (int) transform(s[12]);
-                Vector position = new Vector(xPosition, yPosition);
+                Position position = new Position(xPosition, yPosition);
                 return new Asteroid(id, position, rotation, height, width, direction, clockwise, initialHealth, currentHealth);
             }
             case "BULLET" -> {
                 String shipId = (String) transform(s[10]);
                 int damage = (int) transform(s[11]);
                 String bulletType = (String) transform(s[12]);
-                Vector position = new Vector(xPosition, yPosition);
-                return new Bullet(id, position, rotation, height, width, direction, shipId, damage, getBulletType(bulletType));
+                Position position = new Position(xPosition, yPosition);
+                return new Bullet(id, position, rotation, height, width, direction, shipId, damage, getBulletType());
             }
         }
         return null;    }
 
-    private BulletType getBulletType(String bulletType) {
+    private BulletType getBulletType() {
         return BulletType.BULLET;
     }
 

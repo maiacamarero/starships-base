@@ -6,7 +6,7 @@ public class Asteroid extends Colisionable {
     private int initialHealth;
     private int currentHealth;
 
-    public Asteroid(String id, Vector position, int rotationInDegrees, int height, int width, int direction, boolean clockwise, int initialHealth, int currentHealth) {
+    public Asteroid(String id, Position position, int rotationInDegrees, int height, int width, int direction, boolean clockwise, int initialHealth, int currentHealth) {
         super(id, CollidableType.ASTEROID, position, rotationInDegrees, height, width, CollidableShape.ELLIPTICAL, direction);
         this.clockwise = clockwise;
         this.initialHealth = initialHealth;
@@ -21,7 +21,7 @@ public class Asteroid extends Colisionable {
     }
 
     private boolean isOutOfBounds(int shift1, int shift2){
-        if (!isInBounds(new Vector(getPosition().getX() + shift1, getPosition().getY() + shift2))){
+        if (!isInBounds(new Position(getPosition().getX() + shift1, getPosition().getY() + shift2))){
             return true;
         }else return false;
     }
@@ -35,7 +35,7 @@ public class Asteroid extends Colisionable {
         int newX = (int) (getPosition().getX() + 0.7 * Math.sin(Math.PI * 2 * getDirection() / 360));
         int newY = (int) (getPosition().getY() + 0.7 * Math.cos(Math.PI * 2 * getDirection() / 360));
         int newRotationInDegrees;
-        Vector newPosition = new Vector(newX, newY);
+        Position newPosition = new Position(newX, newY);
         if (clockwise) {
             newRotationInDegrees = getRotationInDegrees() + 2;
         } else {

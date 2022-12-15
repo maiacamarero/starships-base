@@ -8,12 +8,12 @@ public class Ship extends Colisionable{
 
     private BulletType bulletType;
 
-    public Ship(String id, Vector position, int rotationInDegrees, int height, int width, String playerId) {
+    public Ship(String id, Position position, int rotationInDegrees, int height, int width, String playerId) {
         super(id, CollidableType.SHIP, position, rotationInDegrees, height, width, CollidableShape.TRIANGULAR, rotationInDegrees);
         this.playerId = playerId;
     }
 
-    public Ship(String id, Vector position, int rotationInDegrees, int height, int width, String playerId, long lastBulletShot, int direction, double boost, BulletType bulletType) {
+    public Ship(String id, Position position, int rotationInDegrees, int height, int width, String playerId, long lastBulletShot, int direction, double boost, BulletType bulletType) {
         super(id, CollidableType.SHIP, position, rotationInDegrees, height, width, CollidableShape.TRIANGULAR, direction);
         this.playerId = playerId;
         this.lastBulletShot = lastBulletShot;
@@ -31,7 +31,7 @@ public class Ship extends Colisionable{
         if (boost > 0){
             int newX = (int) (getPosition().getX() -  3.5 * Math.sin(Math.PI * 2 * getDirection() / 360));
             int newY = (int) (getPosition().getY() +  3.5 * Math.cos(Math.PI * 2 * getDirection() / 360));
-            Vector position = new Vector(newX, newY);
+            Position position = new Position(newX, newY);
             if (!isInBounds(position)){
                 return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(),getWidth(),playerId,lastBulletShot, getDirection(), 0, bulletType);
             }

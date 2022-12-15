@@ -86,7 +86,7 @@ public class Collision {
             if (ship.getId().equals(element.getId())){
                 newPlayer = new Player(player.getPlayerId(), player.getPoints(), player.getHealth().reduce(-1), player.getShipId());
                 if (newPlayer.getHealth().getValue() > 0){
-                    newElements.add(new Ship(ship.getId(), new Vector(300, 300), 180, ship.getHeight(), ship.getWidth(), ship.getPlayerId(), ship.getLastBulletShot(), 180, 0, ship.getBulletType()));
+                    newElements.add(new Ship(ship.getId(), new Position(300, 300), 180, ship.getHeight(), ship.getWidth(), ship.getPlayerId(), ship.getLastBulletShot(), 180, 0, ship.getBulletType()));
                 }else {
                     game.addDeadElements(element.getId());
                     newPlayer = null;
@@ -132,7 +132,7 @@ public class Collision {
                 newPlayer = new Player(shipPlayer.getPlayerId(),shipPlayer.getPoints(), new Health(shipPlayer.getHealth().getValue()-1), shipPlayer.getShipId());
                 if (newPlayer.getHealth().getValue() > 0){
                     //reset position
-                    newGameObjects.add(new Ship(ship.getId(),new Vector(300, 300),180, ship.getHeight(),ship.getWidth(),ship.getPlayerId(),ship.getLastBulletShot(),180,0, ship.getBulletType()));
+                    newGameObjects.add(new Ship(ship.getId(),new Position(300, 300),180, ship.getHeight(),ship.getWidth(),ship.getPlayerId(),ship.getLastBulletShot(),180,0, ship.getBulletType()));
                 } else{
                     game.addDeadElements(ship.getId());
                 }

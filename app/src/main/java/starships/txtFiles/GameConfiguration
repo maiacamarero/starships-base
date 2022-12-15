@@ -1,0 +1,4 @@
+amountOfPlayers:2
+keyBoardSettings:accelerate-1=W;stop-1=S;shoot-1=SPACE;rotate-left-1=LEFT;rotate-right-1=RIGHT;accelerate-2=T;stop-2=G;shoot-2=L;rotate-left-2=J;rotate-right-2=K
+amountOfLives:3
+bulletTypes:bulletType-1=LIGHTNING;bulletType-2=LIGHTNING
