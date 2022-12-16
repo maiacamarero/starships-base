@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import starships.Game
 import starships.collidable.*
+import java.util.StringJoiner
 import kotlin.system.exitProcess
 
 fun main() {

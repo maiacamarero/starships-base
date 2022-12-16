@@ -20,7 +20,6 @@ public class Ship extends Collidable {
         this.lastBulletShot = lastBulletShot;
         this.accelerate = boost;
         this.bulletType = bulletType;
-
     }
 
     public Ship shoot(){

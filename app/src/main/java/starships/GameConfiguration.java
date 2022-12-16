@@ -1,5 +1,6 @@
 package starships;
 
+import edu.austral.ingsis.starships.ui.KeyPressed;
 import javafx.scene.input.KeyCode;
 
 import java.io.BufferedReader;

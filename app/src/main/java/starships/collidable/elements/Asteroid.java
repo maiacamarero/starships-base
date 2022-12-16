@@ -34,8 +34,8 @@ public class Asteroid extends Collidable {
     }
 
     private Collidable move() {
-        int newX = (int) (getPosition().getX() + 0.7 * Math.sin(Math.PI * 2 * getDirection() / 360));
-        int newY = (int) (getPosition().getY() + 0.7 * Math.cos(Math.PI * 2 * getDirection() / 360));
+        int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection() / 360));
+        int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection() / 360));
         double newRotationInDegrees;
         Position newPosition = new Position(newX, newY);
         if (clockwise) {

@@ -14,29 +14,29 @@ public class AsteroidFactory {
     static Random random = new Random();
 
     public static void generate(List<Asteroid> asteroids, List<Collidable> elements){
-        if (asteroids.size() < 5){
-            List<Ship> ships = getCurrentShips(elements);
+        if (asteroids.size() < 10){
+            List<Ship> ships = getCurrentsShips(elements);
             int x, y;
             Ship target = getRandomShip(ships);
             if (target == null) return;
-            int side = random.nextInt(7);
-            int n = random.nextInt(1000);
+            int side = random.nextInt(20);
+            int number = random.nextInt(2000);
             switch (side){
                 case 0 -> {
-                    x = n;
+                    x = number;
                     y = 0;
                 }
                 case 1 -> {
                     x = 0;
-                    y = n;
+                    y = number;
                 }
                 case 2 -> {
-                    x = n;
+                    x = number;
                     y = 994;
                 }
                 default -> {
                     x = 994;
-                    y = n;
+                    y = number;
                 }
             }
             Position position = new Position(x, y);
@@ -49,7 +49,7 @@ public class AsteroidFactory {
         }
     }
 
-    private static List<Ship> getCurrentShips(List<Collidable> elements) {
+    private static List<Ship> getCurrentsShips(List<Collidable> elements) {
         List<Ship> ships = new ArrayList<>();
         for (Collidable element : elements){
             if (element.getCollidableType() == CollidableType.SHIP){
