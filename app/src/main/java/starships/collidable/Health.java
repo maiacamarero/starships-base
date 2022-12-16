@@ -11,7 +11,7 @@ public class Health {
         return value;
     }
 
-    public Health reduce(int value){
+    public Health reduce(int value) {
         return new Health(this.value - value);
     }
 }

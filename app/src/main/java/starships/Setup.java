@@ -6,7 +6,21 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Setup extends Configuration{
+public class Setup{
+
+    public static List<String> getLines(String directory) {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(directory))){
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lines;
+    }
 
     public void saveGame(State state){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(getDirectory()))){
@@ -119,7 +133,7 @@ public class Setup extends Configuration{
         return null;    }
 
     private BulletType getBulletType() {
-        return BulletType.BULLET;
+        return BulletType.LIGHTNING;
     }
 
     private List<Player> getSavedPlayers(List<String> stringPlayers) {

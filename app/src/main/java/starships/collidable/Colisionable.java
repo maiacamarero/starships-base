@@ -4,14 +4,14 @@ public abstract class Colisionable {
 
     private final String id;
     private Position position;
-    private final int rotationInDegrees;
-    private final int direction;
-    private final int height;
-    private final int width;
+    private final double rotationInDegrees;
+    private final double direction;
+    private final double height;
+    private final double width;
     private final CollidableType collidableType;
     private final CollidableShape collidableShape;
 
-    public Colisionable(String id, CollidableType collidableType, Position position, int rotationInDegrees, int height, int width, CollidableShape collidableShape, int direction) {
+    public Colisionable(String id, CollidableType collidableType, Position position, double rotationInDegrees, double height, double width, CollidableShape collidableShape, double direction) {
         this.id = id;
         this.position = position;
         this.rotationInDegrees = rotationInDegrees;
@@ -33,7 +33,7 @@ public abstract class Colisionable {
         return position;
     }
 
-    public int getRotationInDegrees() {
+    public double getRotationInDegrees() {
         return rotationInDegrees;
     }
 
@@ -45,15 +45,15 @@ public abstract class Colisionable {
         return collidableShape;
     }
 
-    public int getDirection() {
+    public double getDirection() {
         return direction;
     }
 
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 
-    public int getWidth() {
+    public double getWidth() {
         return width;
     }
 

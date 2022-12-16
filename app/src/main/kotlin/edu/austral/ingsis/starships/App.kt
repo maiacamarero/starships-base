@@ -29,7 +29,7 @@ class Starships : Application() {
     private val keyTracker = KeyTracker()
 
     companion object {
-        val STARSHIP_BLUE = ImageRef("starship_blue", 70.0, 70.0)
+        val STARSHIP_BLUE = ImageRef("starship", 70.0, 70.0)
         val BULLET_BLUE = ImageRef("bullet_blue", 70.0, 70.0)
         val ASTEROID = ImageRef("asteroid", 70.0, 70.0)
         val game = Game()
@@ -151,7 +151,7 @@ class Starships : Application() {
         verticalLayout.children.addAll(title, newAndLoadGame)
 
         val menu = Scene(verticalLayout)
-        menu.stylesheets.add(this::class.java.classLoader.getResource("styles.css")?.toString())
+        menu.stylesheets.add(this::class.java.classLoader.getResource("style.css")?.toString())
         return menu
     }
 
@@ -223,7 +223,7 @@ class Starships : Application() {
             exitGame
         )
         val pause = Scene(verticalLayout)
-        pause.stylesheets.add(this::class.java.classLoader.getResource("styles.css")?.toString())
+        pause.stylesheets.add(this::class.java.classLoader.getResource("style.css")?.toString())
         return pause
     }
 }

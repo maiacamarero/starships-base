@@ -13,7 +13,7 @@ public class Ship extends Colisionable{
         this.playerId = playerId;
     }
 
-    public Ship(String id, Position position, int rotationInDegrees, int height, int width, String playerId, long lastBulletShot, int direction, double boost, BulletType bulletType) {
+    public Ship(String id, Position position, double rotationInDegrees, double height, double width, String playerId, long lastBulletShot, double direction, double boost, BulletType bulletType) {
         super(id, CollidableType.SHIP, position, rotationInDegrees, height, width, CollidableShape.TRIANGULAR, direction);
         this.playerId = playerId;
         this.lastBulletShot = lastBulletShot;

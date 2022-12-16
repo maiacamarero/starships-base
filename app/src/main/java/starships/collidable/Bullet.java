@@ -7,7 +7,7 @@ public class Bullet extends Colisionable {
 
     private BulletType bulletType;
 
-    public Bullet(String id, Position position, int rotationInDegrees, int height, int width, int direction, String shipID, int damage, BulletType bulletType) {
+    public Bullet(String id, Position position, double rotationInDegrees, double height, double width, double direction, String shipID, int damage, BulletType bulletType) {
         super(id, CollidableType.BULLET, position, rotationInDegrees, height, width, CollidableShape.RECTANGULAR, direction);
         this.ship = shipID;
         this.damage = damage;

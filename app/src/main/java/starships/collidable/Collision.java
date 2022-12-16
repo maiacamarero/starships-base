@@ -129,7 +129,7 @@ public class Collision {
                 game.addDeadElements(element.getId());
             } else if (element.getId().equals(ship.getId())) {
                 assert shipPlayer != null;
-                newPlayer = new Player(shipPlayer.getPlayerId(),shipPlayer.getPoints(), new Health(shipPlayer.getHealth().getValue()-1), shipPlayer.getShipId());
+                newPlayer = new Player(shipPlayer.getPlayerId(),shipPlayer.getPoints(), new Health(shipPlayer.getHealth().reduce( 1).getValue()), shipPlayer.getShipId());
                 if (newPlayer.getHealth().getValue() > 0){
                     //reset position
                     newGameObjects.add(new Ship(ship.getId(),new Position(300, 300),180, ship.getHeight(),ship.getWidth(),ship.getPlayerId(),ship.getLastBulletShot(),180,0, ship.getBulletType()));

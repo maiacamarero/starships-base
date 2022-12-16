@@ -61,17 +61,17 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
 
     public void shoot(String shipID){
         List<Colisionable> newElements = new ArrayList<>();
-        Ship bulletsShip = null;
+        Ship shipShooting = null;
         for (Colisionable element : getElements()) {
             if (Objects.equals(element.getId(), shipID)){
-                bulletsShip = (Ship) element;
-                if (bulletsShip.canShoot()){
-                    newElements.add(bulletsShip.shoot());
-                }else newElements.add(bulletsShip.getNewElementColisionable());
+                shipShooting = (Ship) element;
+                if (shipShooting.canShoot()){
+                    newElements.add(shipShooting.shoot());
+                }else newElements.add(shipShooting.getNewElementColisionable());
             }else newElements.add(element.getNewElementColisionable());
         }
-        if (bulletsShip != null && bulletsShip.canShoot()){
-            newElements.add(BulletFactory.generate(bulletsShip));
+        if (shipShooting != null && shipShooting.canShoot()){
+            newElements.add(BulletFactory.generate(shipShooting));
         }
         refreshState(newElements, getNewPlayers());
     }
