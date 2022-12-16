@@ -67,7 +67,7 @@ class Starships : Application() {
         }
     }
 
-    fun getImage(element: Colisionable) : ImageRef {
+    fun getImage(element: Collidable) : ImageRef {
         if (element.collidableType == CollidableType.SHIP){
             return STARSHIP_BLUE
         }

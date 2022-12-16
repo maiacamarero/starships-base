@@ -2,7 +2,7 @@ package starships.collidable.elements;
 
 import starships.collidable.*;
 
-public class Bullet extends Colisionable {
+public class Bullet extends Collidable {
 
     private final String ship;
     private final int damage;
@@ -20,14 +20,14 @@ public class Bullet extends Colisionable {
     }
 
     @Override
-    public Colisionable update(){
+    public Collidable update(){
         if (!isInBounds()){
             return null;
         }return move();
     }
 
     @Override
-    public Colisionable getNewElementColisionable() {
+    public Collidable getNewElementColisionable() {
         return new Bullet(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getDirection(), getShipId(), damage, bulletType);
     }
 

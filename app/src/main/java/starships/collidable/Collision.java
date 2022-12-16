@@ -12,16 +12,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class Collision {
-    public static State handleCollision(Colisionable colisionable, Colisionable otherColisionable, State state, Game game) {
-        List<Colisionable> elements = state.getElements();
+    public static State handleCollision(Collidable collidable, Collidable otherCollidable, State state, Game game) {
+        List<Collidable> elements = state.getElements();
         List<Player> players = state.getPlayers();
         State newState = null;
-        if (colisionable.getCollidableType().equals(CollidableType.SHIP) && otherColisionable.getCollidableType().equals(CollidableType.ASTEROID)) {
-            newState = manageShipAsteroidCollision(colisionable, otherColisionable, elements, players, game);
-        } else if (colisionable.getCollidableType().equals(CollidableType.SHIP) && otherColisionable.getCollidableType().equals(CollidableType.BULLET)) {
-            newState = manageBulletShipCollision(colisionable, otherColisionable, elements, players, game);
-        } else if (colisionable.getCollidableType().equals(CollidableType.BULLET) && otherColisionable.getCollidableType().equals(CollidableType.ASTEROID)) {
-            newState = manageBulletAsteroidCollision(colisionable, otherColisionable, elements, players, game);
+        if (collidable.getCollidableType().equals(CollidableType.SHIP) && otherCollidable.getCollidableType().equals(CollidableType.ASTEROID)) {
+            newState = manageShipAsteroidCollision(collidable, otherCollidable, elements, players, game);
+        } else if (collidable.getCollidableType().equals(CollidableType.SHIP) && otherCollidable.getCollidableType().equals(CollidableType.BULLET)) {
+            newState = manageBulletShipCollision(collidable, otherCollidable, elements, players, game);
+        } else if (collidable.getCollidableType().equals(CollidableType.BULLET) && otherCollidable.getCollidableType().equals(CollidableType.ASTEROID)) {
+            newState = manageBulletAsteroidCollision(collidable, otherCollidable, elements, players, game);
         }
         if (newState == null) {
             return new State(game.getNewElements(), game.getNewPlayers());
@@ -29,21 +29,21 @@ public class Collision {
         return newState;
     }
 
-    private static State manageBulletAsteroidCollision(Colisionable colisionable, Colisionable otherColisionable, List<Colisionable> elements, List<Player> players, Game game) {
+    private static State manageBulletAsteroidCollision(Collidable collidable, Collidable otherCollidable, List<Collidable> elements, List<Player> players, Game game) {
         Bullet bullet;
         Asteroid asteroid;
-        if (colisionable.getCollidableType() == CollidableType.BULLET){
-            bullet = (Bullet) colisionable;
-            asteroid = (Asteroid) otherColisionable;
+        if (collidable.getCollidableType() == CollidableType.BULLET){
+            bullet = (Bullet) collidable;
+            asteroid = (Asteroid) otherCollidable;
         }else{
-            bullet = (Bullet) otherColisionable;
-            asteroid = (Asteroid) colisionable;
+            bullet = (Bullet) otherCollidable;
+            asteroid = (Asteroid) collidable;
         }
-        List<Colisionable> newElements = new ArrayList<>();
+        List<Collidable> newElements = new ArrayList<>();
         List<Player> newPlayers = new ArrayList<>();
         Player player = getPlayer(bullet.getShipId(), players, elements);
         Player newPlayer = null;
-        for (Colisionable element : elements) {
+        for (Collidable element : elements) {
             if (bullet.getId().equals(element.getId())) {
                 game.addDeadElements(element.getId());
             } else if (element.getId().equals(asteroid.getId())) {
@@ -70,21 +70,21 @@ public class Collision {
         return new State(newElements, newPlayers);
     }
 
-    private static State manageShipAsteroidCollision(Colisionable colisionable, Colisionable otherColisionable, List<Colisionable> elements, List<Player> players, Game game) {
+    private static State manageShipAsteroidCollision(Collidable collidable, Collidable otherCollidable, List<Collidable> elements, List<Player> players, Game game) {
         Ship ship;
         Asteroid asteroid;
-        if (colisionable.getCollidableType() == CollidableType.SHIP){
-            ship = (Ship) colisionable;
-            asteroid = (Asteroid) otherColisionable;
+        if (collidable.getCollidableType() == CollidableType.SHIP){
+            ship = (Ship) collidable;
+            asteroid = (Asteroid) otherCollidable;
         }else {
-            ship = (Ship) otherColisionable;
-            asteroid = (Asteroid) colisionable;
+            ship = (Ship) otherCollidable;
+            asteroid = (Asteroid) collidable;
         }
-        List<Colisionable> newElements = new ArrayList<>();
+        List<Collidable> newElements = new ArrayList<>();
         List<Player> newPlayers = new ArrayList<>();
         Player player = getPlayer(ship.getPlayerId(), players, elements);
         Player newPlayer = null;
-        for (Colisionable element : elements){
+        for (Collidable element : elements){
             if (ship.getId().equals(element.getId())){
                 newPlayer = new Player(player.getPlayerId(), player.getPoints(), player.getHealth().reduce(-1), player.getShipId());
                 if (newPlayer.getHealth().getValue() > 0){
@@ -111,22 +111,22 @@ public class Collision {
         return new State(newElements, newPlayers);
     }
 
-    private static State manageBulletShipCollision(Colisionable colisionable, Colisionable otherColisionable, List<Colisionable> elements, List<Player> players, Game game) {
+    private static State manageBulletShipCollision(Collidable collidable, Collidable otherCollidable, List<Collidable> elements, List<Player> players, Game game) {
         Bullet bullet;
         Ship ship;
-        if (colisionable.getCollidableType() == CollidableType.BULLET){
-            bullet = (Bullet) colisionable;
-            ship = (Ship) otherColisionable;
+        if (collidable.getCollidableType() == CollidableType.BULLET){
+            bullet = (Bullet) collidable;
+            ship = (Ship) otherCollidable;
         }else {
-            bullet = (Bullet) otherColisionable;
-            ship = (Ship) colisionable;
+            bullet = (Bullet) otherCollidable;
+            ship = (Ship) collidable;
         }
         if (Objects.equals(ship.getId(), bullet.getShipId())) return null;
-        List<Colisionable> newGameObjects = new ArrayList<>();
+        List<Collidable> newGameObjects = new ArrayList<>();
         List<Player> newPlayers = new ArrayList<>();
         Player shipPlayer = getPlayer(ship.getPlayerId(), players);
         Player newPlayer = null;
-        for (Colisionable element : elements){
+        for (Collidable element : elements){
             if (bullet.getId().equals(element.getId())){
                 game.addDeadElements(element.getId());
             } else if (element.getId().equals(ship.getId())) {
@@ -165,9 +165,9 @@ public class Collision {
         return null;
     }
 
-    private static Player getPlayer(String shipId, List<Player> players, List<Colisionable> colisionables) {
+    private static Player getPlayer(String shipId, List<Player> players, List<Collidable> collidables) {
         String playerId = "";
-        for (Colisionable value : colisionables) {
+        for (Collidable value : collidables) {
             if (value.getCollidableType() == CollidableType.SHIP && Objects.equals(value.getId(), shipId)) {
                 Ship ship = (Ship) value;
                 playerId = ship.getPlayerId();

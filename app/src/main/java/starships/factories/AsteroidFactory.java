@@ -13,7 +13,7 @@ public class AsteroidFactory {
     private static int counter = 0;
     static Random random = new Random();
 
-    public static void generate(List<Asteroid> asteroids, List<Colisionable> elements){
+    public static void generate(List<Asteroid> asteroids, List<Collidable> elements){
         if (asteroids.size() < 5){
             List<Ship> ships = getCurrentShips(elements);
             int x, y;
@@ -49,9 +49,9 @@ public class AsteroidFactory {
         }
     }
 
-    private static List<Ship> getCurrentShips(List<Colisionable> elements) {
+    private static List<Ship> getCurrentShips(List<Collidable> elements) {
         List<Ship> ships = new ArrayList<>();
-        for (Colisionable element : elements){
+        for (Collidable element : elements){
             if (element.getCollidableType() == CollidableType.SHIP){
                 ships.add((Ship) element);
             }

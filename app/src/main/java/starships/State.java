@@ -1,19 +1,19 @@
 package starships;
 
-import starships.collidable.Colisionable;
+import starships.collidable.Collidable;
 
 import java.util.List;
 
 public class State {
-    private List<Colisionable> elements;
+    private List<Collidable> elements;
     private List<Player> players;
 
-    public State(List<Colisionable> elements, List<Player> players) {
+    public State(List<Collidable> elements, List<Player> players) {
         this.elements = elements;
         this.players = players;
     }
 
-    public List<Colisionable> getElements() {
+    public List<Collidable> getElements() {
         return elements;
     }
 

@@ -2,7 +2,7 @@ package starships.collidable.elements;
 
 import starships.collidable.*;
 
-public class Asteroid extends Colisionable {
+public class Asteroid extends Collidable {
 
     private final boolean clockwise;
     private final Health initialHealth;
@@ -16,7 +16,7 @@ public class Asteroid extends Colisionable {
     }
 
     @Override
-    public Colisionable update(){
+    public Collidable update(){
         if (isOutOfBounds(3, 3)){
             return null;
         }return move();
@@ -29,11 +29,11 @@ public class Asteroid extends Colisionable {
     }
 
     @Override
-    public Colisionable getNewElementColisionable() {
+    public Collidable getNewElementColisionable() {
         return new Asteroid(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getDirection(), clockwise, initialHealth, currentHealth);
     }
 
-    private Colisionable move() {
+    private Collidable move() {
         int newX = (int) (getPosition().getX() + 0.7 * Math.sin(Math.PI * 2 * getDirection() / 360));
         int newY = (int) (getPosition().getY() + 0.7 * Math.cos(Math.PI * 2 * getDirection() / 360));
         double newRotationInDegrees;

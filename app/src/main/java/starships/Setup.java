@@ -27,7 +27,7 @@ public class Setup{
 
     public void saveGame(State state){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(getDirectory()))){
-            for (Colisionable element : state.getElements()) {
+            for (Collidable element : state.getElements()) {
                 String toWrite = getStringToWriteColisionable(element);
                 writer.write(toWrite + "\n");
             }
@@ -50,24 +50,24 @@ public class Setup{
         return "/Users/maiacamarero/IdeaProjects/starships-base/app/src/main/java/starships/txtFiles/config";
     }
 
-    private String getStringToWriteColisionable(Colisionable colisionable) {
-        String str = "id:" + colisionable.getId() + ";type:" + colisionable.getCollidableType().toString() + ";xPosition:" + colisionable.getPosition().getX() + ";yPosition:" + colisionable.getPosition().getY() + ";rotation:" + colisionable.getRotationInDegrees() + ";direction:" + colisionable.getDirection()
-                + ";height:" + colisionable.getHeight() + ";width:" + colisionable.getWidth() + ";shape:" + colisionable.getCollidableShape();
-        return str + parameters(colisionable);
+    private String getStringToWriteColisionable(Collidable collidable) {
+        String str = "id:" + collidable.getId() + ";type:" + collidable.getCollidableType().toString() + ";xPosition:" + collidable.getPosition().getX() + ";yPosition:" + collidable.getPosition().getY() + ";rotation:" + collidable.getRotationInDegrees() + ";direction:" + collidable.getDirection()
+                + ";height:" + collidable.getHeight() + ";width:" + collidable.getWidth() + ";shape:" + collidable.getCollidableShape();
+        return str + parameters(collidable);
     }
 
-    private String parameters(Colisionable colisionable) {
-        switch (colisionable.getCollidableType()){
+    private String parameters(Collidable collidable) {
+        switch (collidable.getCollidableType()){
             case SHIP -> {
-                Ship ship = (Ship) colisionable;
-                return ";lastBulletShot:" + ship.getLastBulletShot() + ";playerId:" + ship.getPlayerId() + ";boost:" + ship.getBoost() + ";bulletType:" + ship.getBulletType();
+                Ship ship = (Ship) collidable;
+                return ";lastBulletShot:" + ship.getLastBulletShot() + ";playerId:" + ship.getPlayerId() + ";boost:" + ship.getAccelerate() + ";bulletType:" + ship.getBulletType();
             }
             case BULLET -> {
-                Bullet bullet = (Bullet) colisionable;
+                Bullet bullet = (Bullet) collidable;
                 return ";shipId:" + bullet.getShipId() + ";damage:" + bullet.getDamage() + ";bulletType:" + bullet.getBulletType();
             }
             case ASTEROID -> {
-                Asteroid asteroid = (Asteroid) colisionable;
+                Asteroid asteroid = (Asteroid) collidable;
                 return ";clockwise:" + asteroid.isClockwise() + ";initialHealth:" + asteroid.getInitialHealth() + ";currentHealth:" + asteroid.getCurrentHealth();
             }
         };
@@ -83,13 +83,13 @@ public class Setup{
             stringPlayers = configLines.subList(i+1, configLines.size());
             break;
         }
-        List<Colisionable> elements = getSavedElements(stringElements);
+        List<Collidable> elements = getSavedElements(stringElements);
         List<Player> players = getSavedPlayers(stringPlayers);
         return new State(elements, players);
     }
 
-    private List<Colisionable> getSavedElements(List<String> stringElements) {
-        List<Colisionable> elements = new ArrayList<>();
+    private List<Collidable> getSavedElements(List<String> stringElements) {
+        List<Collidable> elements = new ArrayList<>();
         for (String stringElement : stringElements){
             String[] s = stringElement.split(";");
             String id = (String) transform(s[0]);
@@ -106,7 +106,7 @@ public class Setup{
         return elements;
     }
 
-    private Colisionable createElement(String[] s, String id, String type, Position position, int rotation, int direction, int height, int width) {
+    private Collidable createElement(String[] s, String id, String type, Position position, int rotation, int direction, int height, int width) {
         switch (type){
             case "SHIP" -> {
                 long lastBulletShot = (long) transform(s[10]);

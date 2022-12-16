@@ -1,6 +1,6 @@
 package starships.collidable;
 
-public abstract class Colisionable {
+public abstract class Collidable {
 
     private final String id;
     private Position position;
@@ -11,7 +11,7 @@ public abstract class Colisionable {
     private final CollidableType collidableType;
     private final CollidableShape collidableShape;
 
-    public Colisionable(String id, CollidableType collidableType, Position position, double rotationInDegrees, double height, double width, CollidableShape collidableShape, double direction) {
+    public Collidable(String id, CollidableType collidableType, Position position, double rotationInDegrees, double height, double width, CollidableShape collidableShape, double direction) {
         this.id = id;
         this.position = position;
         this.rotationInDegrees = rotationInDegrees;
@@ -22,8 +22,8 @@ public abstract class Colisionable {
         this.collidableShape = collidableShape;
     }
 
-    public abstract Colisionable update();
-    public abstract Colisionable getNewElementColisionable();
+    public abstract Collidable update();
+    public abstract Collidable getNewElementColisionable();
 
     public String getId() {
         return id;

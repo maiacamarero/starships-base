@@ -2,11 +2,11 @@ package starships.collidable.elements;
 
 import starships.collidable.*;
 
-public class Ship extends Colisionable {
+public class Ship extends Collidable {
 
     private long lastBulletShot;
     private final String playerId;
-    private double boost;
+    private double accelerate;
     private BulletType bulletType;
 
     public Ship(String id, Position position, int rotationInDegrees, int height, int width, String playerId) {
@@ -18,18 +18,18 @@ public class Ship extends Colisionable {
         super(id, CollidableType.SHIP, position, rotationInDegrees, height, width, CollidableShape.TRIANGULAR, direction);
         this.playerId = playerId;
         this.lastBulletShot = lastBulletShot;
-        this.boost = boost;
+        this.accelerate = boost;
         this.bulletType = bulletType;
 
     }
 
     public Ship shoot(){
-        return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), playerId, System.currentTimeMillis(), getDirection(), boost, bulletType);
+        return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), playerId, System.currentTimeMillis(), getDirection(), accelerate, bulletType);
     }
 
     @Override
     public Ship update(){
-        if (boost > 0){
+        if (accelerate > 0){
             int newX = (int) (getPosition().getX() -  3.5 * Math.sin(Math.PI * 2 * getDirection() / 360));
             int newY = (int) (getPosition().getY() +  3.5 * Math.cos(Math.PI * 2 * getDirection() / 360));
             Position position = new Position(newX, newY);
@@ -37,15 +37,15 @@ public class Ship extends Colisionable {
                 return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(),getWidth(),playerId,lastBulletShot, getDirection(), 0, bulletType);
             }
             else{
-                return new Ship(getId(), position, getRotationInDegrees(), getHeight(),getWidth(),playerId,lastBulletShot, getDirection(), boost - 5, bulletType);
+                return new Ship(getId(), position, getRotationInDegrees(), getHeight(),getWidth(),playerId,lastBulletShot, getDirection(), accelerate - 5, bulletType);
             }
         }
         return (Ship) getNewElementColisionable();
     }
 
     @Override
-    public Colisionable getNewElementColisionable() {
-        return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), boost, bulletType);
+    public Collidable getNewElementColisionable() {
+        return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), accelerate, bulletType);
     }
 
     public Ship moveX(boolean accept) {
@@ -55,44 +55,45 @@ public class Ship extends Colisionable {
     }
 
     private Ship rightMovement() {
-        if (boost < 100){
-            Position position = new Position(getPosition().getX()+ 70, getPosition().getY() );
-            return new Ship(getId(), position, getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(),boost, bulletType);
+        if (accelerate < 100){
+            Position position = new Position(getPosition().getX() + 70, getPosition().getY() );
+            return new Ship(getId(), position, getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), accelerate, bulletType);
         }
         return (Ship) getNewElementColisionable();
     }
 
 
     private Ship leftMovement() {
-        if (boost < 100){
+        if (accelerate < 100){
             Position position = new Position(getPosition().getX() - 70, getPosition().getY());
-            return new Ship(getId(), position, getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), boost, bulletType);
+            return new Ship(getId(), position, getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), accelerate, bulletType);
         }
         return (Ship) getNewElementColisionable();
     }
 
-    public Ship moveY(boolean accelerate){
-        if (accelerate){
+    public Ship moveY(boolean accept){
+        if (accept){
             return accelerate();
         }else return slowDown();
     }
 
     private Ship slowDown() {
-        if (boost > 0){
-            return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), boost -= 170, bulletType);
+        if (accelerate < 100){
+            Position position = new Position(getPosition().getX(), getPosition().getY() + 70);
+            return new Ship(getId(), position, getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), accelerate -= 170, bulletType);
         }
         return (Ship) getNewElementColisionable();
     }
 
     private Ship accelerate() {
-        if (boost < 100){
-            return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), boost += 70, bulletType);
+        if (accelerate < 100){
+            return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), accelerate += 70, bulletType);
         }
         return (Ship) getNewElementColisionable();
     }
 
     public Ship rotate(int rotation){
-        return new Ship(getId(), getPosition(), getRotationInDegrees() + rotation, getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), boost, bulletType);
+        return new Ship(getId(), getPosition(), getRotationInDegrees() + rotation, getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), accelerate, bulletType);
     }
 
     public boolean canShoot(){
@@ -107,8 +108,8 @@ public class Ship extends Colisionable {
         return playerId;
     }
 
-    public double getBoost() {
-        return boost;
+    public double getAccelerate() {
+        return accelerate;
     }
 
     public BulletType getBulletType() {
