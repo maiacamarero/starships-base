@@ -56,7 +56,7 @@ public class Ship extends Collidable {
 
     private Ship rightMovement() {
         if (accelerate < 100){
-            Position position = new Position(getPosition().getX() + 70, getPosition().getY() );
+            Position position = new Position(getPosition().getX() + 10, getPosition().getY() );
             return new Ship(getId(), position, getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), accelerate, bulletType);
         }
         return (Ship) getNewElementColisionable();
@@ -65,7 +65,7 @@ public class Ship extends Collidable {
 
     private Ship leftMovement() {
         if (accelerate < 100){
-            Position position = new Position(getPosition().getX() - 70, getPosition().getY());
+            Position position = new Position(getPosition().getX() - 10, getPosition().getY());
             return new Ship(getId(), position, getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), accelerate, bulletType);
         }
         return (Ship) getNewElementColisionable();
