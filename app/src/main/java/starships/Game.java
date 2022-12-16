@@ -56,9 +56,9 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
         return config.getKeyboardConfig();
     }
 
-    public void addPoints(String playerID, int points){
-        int currentPoints = this.points.get(playerID);
-        this.points.put(playerID, currentPoints + points);
+    public void addPoints(String playerID, int pointsToAdd){
+        int currentPoints = points.get(playerID);
+        points.put(playerID, currentPoints + pointsToAdd);
     }
 
     public void shoot(String shipID){

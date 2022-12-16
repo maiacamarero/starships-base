@@ -30,7 +30,7 @@ class Starships : Application() {
 
     companion object {
         val STARSHIP_BLUE = ImageRef("starship", 70.0, 70.0)
-        val BULLET_BLUE = ImageRef("bullet_blue", 70.0, 70.0)
+        val BULLET_BLUE = ImageRef("bullet2", 70.0, 70.0)
         val ASTEROID = ImageRef("asteroid", 70.0, 70.0)
         val game = Game()
     }
@@ -104,11 +104,11 @@ class Starships : Application() {
     private fun menuScene(primaryStage: Stage, pane: StackPane): Scene {
         val title = Label("STARSHIPS")
         title.textFill = Color.BLANCHEDALMOND
-        title.style = "-fx-font-family: VT323; -fx-font-size: 100;"
+        title.style = "-fx-font-family: VT323; -fx-font-size: 90;"
 
-        val newGame = Label("New Game")
+        val newGame = Label("Juego Nuevo")
         newGame.textFill = Color.BLANCHEDALMOND
-        newGame.style = "-fx-font-family: VT323; -fx-font-size: 50"
+        newGame.style = "-fx-font-family: VT323; -fx-font-size: 45"
         newGame.setOnMouseClicked {
             primaryStage.scene.root = pane
             game.start(false)
@@ -124,9 +124,9 @@ class Starships : Application() {
             newGame.textFill = Color.BLANCHEDALMOND
         }
 
-        val loadGame = Label("Load Game")
+        val loadGame = Label("Juego Guardado")
         loadGame.textFill = Color.BLANCHEDALMOND
-        loadGame.style = "-fx-font-family: VT323; -fx-font-size: 50;"
+        loadGame.style = "-fx-font-family: VT323; -fx-font-size: 45;"
         loadGame.setOnMouseClicked {
             primaryStage.scene.root = pane
             game.start(true)
@@ -156,9 +156,9 @@ class Starships : Application() {
     }
 
     fun pauseScene(primaryStage: Stage, pane: StackPane, menu: Scene): Scene {
-        val resume = Label("Resume")
-        resume.textFill = Color.BLUE
-        resume.style = "-fx-font-family: VT323; -fx-font-size: 50"
+        val resume = Label("Reanudar")
+        resume.textFill = Color.BLANCHEDALMOND
+        resume.style = "-fx-font-family: VT323; -fx-font-size: 45"
         resume.setOnMouseClicked {
             primaryStage.scene = menu
             primaryStage.scene.root = pane
@@ -174,9 +174,9 @@ class Starships : Application() {
             resume.textFill = Color.BLANCHEDALMOND
         }
         var saved = false
-        val saveGame = Label("Save game")
+        val saveGame = Label("Guardar")
         saveGame.textFill = Color.BLANCHEDALMOND
-        saveGame.style = "-fx-font-family: VT323; -fx-font-size: 50;"
+        saveGame.style = "-fx-font-family: VT323; -fx-font-size: 45;"
         saveGame.setOnMouseClicked {
             saveGame.textFill = Color.PURPLE
             game.saveGame()
@@ -198,9 +198,9 @@ class Starships : Application() {
             }
         }
 
-        val exitGame = Label("Exit game")
+        val exitGame = Label("Salir del Juego")
         exitGame.textFill = Color.BLANCHEDALMOND
-        exitGame.style = "-fx-font-family: VT323; -fx-font-size: 50;"
+        exitGame.style = "-fx-font-family: VT323; -fx-font-size: 45;"
         exitGame.setOnMouseClicked {
             game.printLeaderBoard()
             stop()
@@ -283,18 +283,12 @@ class KeyPressedListener(private val game: Game, private val starships: Starship
             map["right-2"] -> game.moveShipX("starship-2", false)
             map["right-1"] -> game.moveShipX("starship-1", false)
 
-
             KeyCode.P -> {
                 game.pauseUnpauseGame()
                 if (game.isPaused){
                     primaryStage.scene = starships.pauseScene(primaryStage, pane, menu)
                 }
             }
-
-//            KeyCode.UP -> starship.y.set(starship.y.value - 5 )
-//            KeyCode.DOWN -> starship.y.set(starship.y.value + 5 )
-//            KeyCode.LEFT -> starship.x.set(starship.x.value - 5 )
-//            KeyCode.RIGHT -> starship.x.set(starship.x.value + 5 )
             else -> {}
         }
     }

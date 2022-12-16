@@ -14,6 +14,6 @@ public class BulletFactory {
         String id = "bullet-" + counter++;
         Random random = new Random();
         int r = random.nextInt(2, 5);
-        return new Bullet(id, new Position(ship.getPosition().getX()+16, ship.getPosition().getY()), ship.getRotationInDegrees()-20, r*12, r*4, ship.getRotationInDegrees(), ship.getId(), 1, ship.getBulletType());
+        return new Bullet(id, new Position(ship.getPosition().getX()+16, ship.getPosition().getY()), ship.getRotationInDegrees()-20, r*12, r*4, ship.getRotationInDegrees(), ship.getId(), r*100, ship.getBulletType());
     }
 }

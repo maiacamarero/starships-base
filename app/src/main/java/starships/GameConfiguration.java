@@ -62,7 +62,6 @@ public class GameConfiguration{
             case "H" -> KeyCode.H;
             case "L" -> KeyCode.L;
             case "SPACE" -> KeyCode.SPACE;
-
             case "LEFT" -> KeyCode.LEFT;
             case "RIGHT" -> KeyCode.RIGHT;
             default -> KeyCode.Q;
