@@ -207,8 +207,8 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
 
     public void printLeaderBoard(){
         if (getPlayers() != null){
-            System.out.println("LEADERBOARD");
-            points.forEach((key, value) -> System.out.println(key + " = " + value + " points"));
+            System.out.println("Tabla de Clasificación");
+            points.forEach((key, value) -> System.out.println(key + " = " + value + " puntos."));
         }
     }
 
