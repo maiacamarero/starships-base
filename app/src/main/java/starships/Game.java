@@ -1,6 +1,8 @@
 package starships;
 
 import javafx.scene.input.KeyCode;
+import starships.collidable.elements.Asteroid;
+import starships.collidable.elements.Ship;
 import starships.factories.AsteroidFactory;
 import starships.factories.BulletFactory;
 import starships.factories.PlayerFactory;
@@ -47,7 +49,7 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
     }
 
     private void startFromSavedGame() {
-        this.state = setup.getSavedGameState();
+        this.state = setup.getSavedState();
     }
 
     public Map<String, KeyCode> keyboardConfig(){
@@ -73,7 +75,7 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
         if (shipShooting != null && shipShooting.canShoot()){
             newElements.add(BulletFactory.generate(shipShooting));
         }
-        refreshState(newElements, getNewPlayers());
+        restoreState(newElements, getNewPlayers());
     }
 
     public List<Player> getNewPlayers() {
@@ -90,20 +92,30 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
         }else return state.getPlayers();
     }
 
-    public void refreshState(List<Colisionable> elements, List<Player> players){
+    public void restoreState(List<Colisionable> elements, List<Player> players){
         this.state = new State(elements, players);
     }
 
-    public void moveShip(String shipID, boolean up){
+    public void moveShip(String shipID, boolean accelerate){
         List<Colisionable> newElements = new ArrayList<>();
-        assert getElements() != null;
         for (Colisionable element : getElements()){
             if (element.getId().equals(shipID) && !isPaused){
                 Ship ship = (Ship) element;
-                newElements.add(ship.move(up));
+                newElements.add(ship.moveY(accelerate));
             }else newElements.add(element.getNewElementColisionable());
         }
-        refreshState(newElements, getNewPlayers());
+        restoreState(newElements, getNewPlayers());
+    }
+
+    public void moveShipX(String shipID, boolean accept){
+        List<Colisionable> newElements = new ArrayList<>();
+        for (Colisionable element : getElements()){
+            if (element.getId().equals(shipID) && !isPaused){
+                Ship ship = (Ship) element;
+                newElements.add(ship.moveX(accept));
+            }else newElements.add(element.getNewElementColisionable());
+        }
+        restoreState(newElements, getNewPlayers());
     }
 
     public List<Colisionable> getElements() {
@@ -122,13 +134,13 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
 
     public void rotate(String shipID, int rotationInDegrees){
         List<Colisionable> newElements = new ArrayList<>();
-        for (Colisionable element: Objects.requireNonNull(getElements())){
+        for (Colisionable element: getElements()){
             if (element.getId().equals(shipID) && !isPaused){
                 Ship ship = (Ship) element;
                 newElements.add(ship.rotate(rotationInDegrees));
             }else newElements.add(element.getNewElementColisionable());
         }
-        refreshState(newElements, getNewPlayers());
+        restoreState(newElements, getNewPlayers());
     }
 
     public void handleCollision(String id, String otherID){
@@ -145,7 +157,7 @@ public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno 
         if (colisionable != null && otherColisionable != null){
             this.state = Collision.handleCollision(colisionable, otherColisionable, state, this);
         }else {
-            refreshState(getNewElements(), getNewPlayers());
+            restoreState(getNewElements(), getNewPlayers());
         }
     }
 

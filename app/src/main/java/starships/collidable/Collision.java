@@ -3,6 +3,9 @@ package starships.collidable;
 import starships.Game;
 import starships.Player;
 import starships.State;
+import starships.collidable.elements.Asteroid;
+import starships.collidable.elements.Bullet;
+import starships.collidable.elements.Ship;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,8 +47,8 @@ public class Collision {
             if (bullet.getId().equals(element.getId())) {
                 game.addDeadElements(element.getId());
             } else if (element.getId().equals(asteroid.getId())) {
-                Asteroid newAsteroid = new Asteroid(asteroid.getId(), asteroid.getPosition(), asteroid.getRotationInDegrees(), asteroid.getHeight(), asteroid.getWidth(), asteroid.getDirection(), asteroid.isClockwise(), asteroid.getInitialHealth(), asteroid.getCurrentHealth() - bullet.getDamage());
-                if (newAsteroid.getCurrentHealth() <= 0) {
+                Asteroid newAsteroid = new Asteroid(asteroid.getId(), asteroid.getPosition(), asteroid.getRotationInDegrees(), asteroid.getHeight(), asteroid.getWidth(), asteroid.getDirection(), asteroid.isClockwise(), asteroid.getInitialHealth(), asteroid.getCurrentHealth().reduce(bullet.getDamage()));
+                if (newAsteroid.getCurrentHealth().getValue() <= 0) {
                     newPlayer = new Player(player.getPlayerId(), player.getPoints() + newAsteroid.getPoints(), player.getHealth(), player.getShipId());
                     game.addPoints(newPlayer.getPlayerId(), newAsteroid.getPoints());
                     game.addDeadElements(element.getId());
@@ -59,7 +62,6 @@ public class Collision {
         }
         for (Player player1 : players) {
             if (player1.getPlayerId().equals(player.getPlayerId())){
-                if (newPlayer == null) continue;
                 newPlayers.add(newPlayer);
             }else {
                 newPlayers.add(player1.getNewPlayer());

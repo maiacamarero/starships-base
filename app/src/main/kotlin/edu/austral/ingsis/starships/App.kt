@@ -92,9 +92,9 @@ class Starships : Application() {
                 element.id,
                 element.position.x.toDouble(),
                 element.position.y.toDouble(),
-                element.height.toDouble(),
-                element.width.toDouble(),
-                element.rotationInDegrees.toDouble(),
+                element.height,
+                element.width,
+                element.rotationInDegrees,
                 adaptShape(element.collidableShape),
                 getImage(element)
             )
@@ -241,10 +241,10 @@ class TimeListener(private val elements: Map<String, ElementModel>, private val 
             if (elem != null){
                 elem.x.set(element.position.x.toDouble())
                 elem.y.set(element.position.y.toDouble())
-                elem.rotationInDegrees.set(element.rotationInDegrees.toDouble())
-                elem.height.set(element.height.toDouble())
-                elem.width.set(element.width.toDouble())
-            }else facade.elements[element.id] = ElementModel(element.id, element.position.x.toDouble(), element.position.y.toDouble(), element.height.toDouble(), element.width.toDouble(), element.rotationInDegrees.toDouble(), starships.adaptShape(element.collidableShape), starships.getImage(element))
+                elem.rotationInDegrees.set(element.rotationInDegrees)
+                elem.height.set(element.height)
+                elem.width.set(element.width)
+            }else facade.elements[element.id] = ElementModel(element.id, element.position.x.toDouble(), element.position.y.toDouble(), element.height, element.width, element.rotationInDegrees, starships.adaptShape(element.collidableShape), starships.getImage(element))
         }
         val deads = game.deadElements
         for (dead in deads){
@@ -278,6 +278,12 @@ class KeyPressedListener(private val game: Game, private val starships: Starship
             map["rotate-left-2"] -> game.rotate("starship-2", -5)
             map["rotate-right-2"] -> game.rotate("starship-2", 5)
             map["shoot-2"] -> game.shoot("starship-2")
+            map["left-1"] -> game.moveShipX("starship-1", true)
+            map["left-2"] -> game.moveShipX("starship-2", true)
+            map["right-2"] -> game.moveShipX("starship-2", false)
+            map["right-1"] -> game.moveShipX("starship-1", false)
+
+
             KeyCode.P -> {
                 game.pauseUnpauseGame()
                 if (game.isPaused){

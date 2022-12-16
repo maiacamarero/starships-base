@@ -1,11 +1,12 @@
-package starships.collidable;
+package starships.collidable.elements;
+
+import starships.collidable.*;
 
 public class Bullet extends Colisionable {
 
-    private String ship;
-    private int damage;
-
-    private BulletType bulletType;
+    private final String ship;
+    private final int damage;
+    private final BulletType bulletType;
 
     public Bullet(String id, Position position, double rotationInDegrees, double height, double width, double direction, String shipID, int damage, BulletType bulletType) {
         super(id, CollidableType.BULLET, position, rotationInDegrees, height, width, CollidableShape.RECTANGULAR, direction);

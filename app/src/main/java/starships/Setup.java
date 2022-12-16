@@ -1,6 +1,9 @@
 package starships;
 
 import starships.collidable.*;
+import starships.collidable.elements.Asteroid;
+import starships.collidable.elements.Bullet;
+import starships.collidable.elements.Ship;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -71,12 +74,11 @@ public class Setup{
         return "";
     }
 
-    public State getSavedGameState(){
+    public State getSavedState(){
         List<String> configLines = getLines(getDirectory());
         List<String> stringElements = null;
         List<String> stringPlayers = null;
         for (int i = 0; i < configLines.size(); i++) {
-            String line = configLines.get(i);
             stringElements = configLines.subList(0, i);
             stringPlayers = configLines.subList(i+1, configLines.size());
             break;
@@ -98,35 +100,29 @@ public class Setup{
             int direction = (int) transform(s[5]);
             int height = (int) transform(s[6]);
             int width = (int) transform(s[7]);
-            String shape = (String) transform(s[8]);
-            String color = (String) transform(s[9]);
-            elements.add(createElement(s, id, type, xPosition, yPosition, rotation, direction, height, width));
+            Position position = new Position(xPosition, yPosition);
+            elements.add(createElement(s, id, type, position, rotation, direction, height, width));
         }
         return elements;
     }
 
-    private Colisionable createElement(String[] s, String id, String type, int xPosition, int yPosition, int rotation, int direction, int height, int width) {
+    private Colisionable createElement(String[] s, String id, String type, Position position, int rotation, int direction, int height, int width) {
         switch (type){
             case "SHIP" -> {
                 long lastBulletShot = (long) transform(s[10]);
                 String playerId = (String) transform(s[11]);
                 double boost = (double) transform(s[12]);
-                String bulletType = (String) transform(s[13]);
-                Position position = new Position(xPosition, yPosition);
                 return new Ship(id, position, rotation, height, width, playerId, lastBulletShot, direction, boost, getBulletType());
             }
             case "ASTEROID" -> {
                 boolean clockwise = (boolean) transform(s[10]);
                 int initialHealth = (int) transform(s[11]);
                 int currentHealth = (int) transform(s[12]);
-                Position position = new Position(xPosition, yPosition);
-                return new Asteroid(id, position, rotation, height, width, direction, clockwise, initialHealth, currentHealth);
+                return new Asteroid(id, position, rotation, height, width, direction, clockwise, new Health(initialHealth), new Health(currentHealth));
             }
             case "BULLET" -> {
                 String shipId = (String) transform(s[10]);
                 int damage = (int) transform(s[11]);
-                String bulletType = (String) transform(s[12]);
-                Position position = new Position(xPosition, yPosition);
                 return new Bullet(id, position, rotation, height, width, direction, shipId, damage, getBulletType());
             }
         }

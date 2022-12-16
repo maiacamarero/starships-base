@@ -54,17 +54,18 @@ public class GameConfiguration{
             case "S" -> KeyCode.S;
             case "A" -> KeyCode.A;
             case "D" -> KeyCode.D;
-            case "Q" -> KeyCode.Q;
-            case "E" -> KeyCode.E;
+            case "N" -> KeyCode.N;
+            case "M" -> KeyCode.M;
+            case "T" -> KeyCode.T;
+            case "G" -> KeyCode.G;
+            case "F" -> KeyCode.F;
+            case "H" -> KeyCode.H;
+            case "L" -> KeyCode.L;
             case "SPACE" -> KeyCode.SPACE;
-            case "UP" -> KeyCode.UP;
-            case "DOWN" -> KeyCode.DOWN;
+
             case "LEFT" -> KeyCode.LEFT;
             case "RIGHT" -> KeyCode.RIGHT;
-            case "NUMPAD1" -> KeyCode.NUMPAD1;
-            case "NUMPAD2" -> KeyCode.NUMPAD2;
-            case "ENTER" -> KeyCode.ENTER;
-            default -> KeyCode.M;
+            default -> KeyCode.Q;
         };
     }
 

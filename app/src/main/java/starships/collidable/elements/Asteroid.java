@@ -1,12 +1,14 @@
-package starships.collidable;
+package starships.collidable.elements;
+
+import starships.collidable.*;
 
 public class Asteroid extends Colisionable {
 
-    private boolean clockwise;
-    private int initialHealth;
-    private int currentHealth;
+    private final boolean clockwise;
+    private final Health initialHealth;
+    private final Health currentHealth;
 
-    public Asteroid(String id, Position position, double rotationInDegrees, double height, double width, double direction, boolean clockwise, int initialHealth, int currentHealth) {
+    public Asteroid(String id, Position position, double rotationInDegrees, double height, double width, double direction, boolean clockwise, Health initialHealth, Health currentHealth) {
         super(id, CollidableType.ASTEROID, position, rotationInDegrees, height, width, CollidableShape.ELLIPTICAL, direction);
         this.clockwise = clockwise;
         this.initialHealth = initialHealth;
@@ -44,36 +46,19 @@ public class Asteroid extends Colisionable {
         return new Asteroid(getId(), newPosition, newRotationInDegrees, getHeight(), getWidth(), getDirection(), clockwise, initialHealth, currentHealth);
     }
 
-    public void setClockwise(boolean clockwise) {
-        this.clockwise = clockwise;
-    }
-
-    public double calculateHealth(){
-        return (this.getWidth() * this.getHeight())/100;
-    }
-
-    public void takeDamage(int amount){
-        this.currentHealth -= amount;
-    }
-
-    public void setInitialHealth(int healthBar) {
-        this.initialHealth = healthBar;
-        this.currentHealth = healthBar;
-    }
-
     public boolean isClockwise() {
         return clockwise;
     }
 
-    public int getInitialHealth() {
+    public Health getInitialHealth() {
         return initialHealth;
     }
 
-    public int getCurrentHealth() {
+    public Health getCurrentHealth() {
         return currentHealth;
     }
 
     public int getPoints(){
-        return initialHealth;
+        return initialHealth.getValue();
     }
 }

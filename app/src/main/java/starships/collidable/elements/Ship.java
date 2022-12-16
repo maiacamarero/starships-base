@@ -1,11 +1,12 @@
-package starships.collidable;
+package starships.collidable.elements;
 
-public class Ship extends Colisionable{
+import starships.collidable.*;
+
+public class Ship extends Colisionable {
 
     private long lastBulletShot;
     private final String playerId;
     private double boost;
-
     private BulletType bulletType;
 
     public Ship(String id, Position position, int rotationInDegrees, int height, int width, String playerId) {
@@ -47,29 +48,50 @@ public class Ship extends Colisionable{
         return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), boost, bulletType);
     }
 
-    public Ship move(boolean up){
-        if (up){
-            return addBoost();
+    public Ship moveX(boolean accept) {
+        if (accept){
+            return leftMovement();
+        }else return rightMovement();
+    }
+
+    private Ship rightMovement() {
+        if (boost < 100){
+            Position position = new Position(getPosition().getX()+ 70, getPosition().getY() );
+            return new Ship(getId(), position, getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(),boost, bulletType);
+        }
+        return (Ship) getNewElementColisionable();
+    }
+
+    private Ship leftMovement() {
+        if (boost < 100){
+            Position position = new Position(getPosition().getX() - 70, getPosition().getY());
+            return new Ship(getId(), position, getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), boost, bulletType);
+        }
+        return (Ship) getNewElementColisionable();
+    }
+
+    public Ship moveY(boolean accelerate){
+        if (accelerate){
+            return accelerate();
         }else return slowDown();
     }
 
     private Ship slowDown() {
         if (boost > 0){
-            return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), boost -170, bulletType);
+            return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), boost -= 170, bulletType);
         }
         return (Ship) getNewElementColisionable();
-
     }
 
-    private Ship addBoost() {
-        if (boost < 1000){
+    private Ship accelerate() {
+        if (boost < 100){
             return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), boost += 70, bulletType);
         }
         return (Ship) getNewElementColisionable();
     }
 
     public Ship rotate(int rotation){
-        return new Ship(getId(), getPosition(), getRotationInDegrees() + rotation, getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), boost , bulletType);
+        return new Ship(getId(), getPosition(), getRotationInDegrees() + rotation, getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), boost, bulletType);
     }
 
     public boolean canShoot(){
@@ -91,4 +113,6 @@ public class Ship extends Colisionable{
     public BulletType getBulletType() {
         return bulletType;
     }
+
+
 }
