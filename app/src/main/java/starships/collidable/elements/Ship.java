@@ -62,6 +62,7 @@ public class Ship extends Colisionable {
         return (Ship) getNewElementColisionable();
     }
 
+
     private Ship leftMovement() {
         if (boost < 100){
             Position position = new Position(getPosition().getX() - 70, getPosition().getY());
