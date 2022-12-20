@@ -15,9 +15,9 @@ public class ShipFactory {
         List<Collidable> listToReturn = new ArrayList<>();
         for (int i = 1; i < amountOfShips+1; i++) {
             String id = "starship-" + i;
-            Vector position = new Vector(((1250/amountOfShips) * i) / 2, 550);
+            Vector position = new Vector(((1250/amountOfShips) * i) / 2, 500);
             Player player = players.get(i-1);
-            Ship ship = new Ship(id, position, 180, 70, 70, player.getPlayerId(), new Vector(300, 300), 10.0, new Health(3), true, 25);
+            Ship ship = new Ship(id, position, 180, 70, 70, player.getPlayerId(), new Vector(300, 300), 0.0, new Health(3), true, 25);
             listToReturn.add(ship);
         }
         return listToReturn;

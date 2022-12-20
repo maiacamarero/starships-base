@@ -233,16 +233,25 @@ class Starships : Application() {
     }
 }
 
-class TimeListener(private val elements: Map<String, ElementModel>,  private var juego: Juego, private val facade: ElementsViewFacade, private val starships: Starships) : EventListener<TimePassed> {
+class TimeListener(private val elements: Map<String, ElementModel>, private var juego: Juego, private val facade: ElementsViewFacade, private val starships: Starships) : EventListener<TimePassed> {
     override fun handle(event: TimePassed) {
         if (juego.hasFinished()){
             juego.printLeaderBoard()
             starships.stop()
         }
-        juego.updateView()
-        val elementsInScreen = juego.elements ?: return
+        juego = juego.updateView()
+
+        var newJuego = juego.updateView()
+
+        val elementsInScreen = juego.state.elements ?: return
         for (element in elementsInScreen){
-            val elem = elements.get(element.id)
+            val elem = elements[element.id]
+            println("------")
+            println(element.position.x)
+            println(element.position.y)
+            println("------")
+
+
             if (elem != null){
                 elem.x.set(element.position.x.toDouble())
                 elem.y.set(element.position.y.toDouble())

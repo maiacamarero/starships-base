@@ -29,10 +29,10 @@ public class Ship extends Collidable {
 
     public Ship update(){
         if (getSpeed() > 0){
-            int newX = (int) (getPosition().getX() + getSpeed() * getDirection().getX());
-            int newY = (int) (getPosition().getY() - getSpeed() * getDirection().getY());
-//            int newX = (int) (getPosition().getX() - 3.5 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
-//            int newY = (int) (getPosition().getY() - 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
+//            int newX = (int) (getPosition().getX() + getSpeed() * getDirection().getX());
+//            int newY = (int) (getPosition().getY() - getSpeed() * getDirection().getY());
+            int newX = (int) (getPosition().getX() - 3.5 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
+            int newY = (int) (getPosition().getY() - 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
 
             Vector position = new Vector(newX, newY);
             if (newX < 720 && newX > 0 && newY < 700 && newY > 0){
@@ -48,12 +48,12 @@ public class Ship extends Collidable {
 
     public Ship move(Vector direction){
         Ship ship;
-        int newX = (int) (getPosition().getX() + getSpeed() * getDirection().getX());
-        int newY = (int) (getPosition().getY() - getSpeed() * getDirection().getY());
+        int newX = (int) (getPosition().getX() - 3.5 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
+        int newY = (int) (getPosition().getY() - 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
         if (direction.getX() == 0 && direction.getY() == 0){
             ship = setDirectionSpeedPosition(direction, 0.0, getPosition());
         }else {
-            ship = setDirectionSpeedPosition(direction, 4.0, new Vector(newX, newY));
+            ship = setDirectionSpeedPosition(direction, 4.0, new Vector(-500, 500));
         }
         return ship;
     }
@@ -67,7 +67,7 @@ public class Ship extends Collidable {
     }
 
     public Ship setSpeed(double speed){
-        return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(),getPlayerId(), lastBulletShot, getDirection(), getSpeed() + speed,bulletType, isVisible(), getHealth());
+        return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(),getPlayerId(), lastBulletShot, getDirection(), getSpeed() + speed, bulletType, isVisible(), getHealth());
     }
 
     public Ship setRotationInDegrees(double rotationInDegrees){
