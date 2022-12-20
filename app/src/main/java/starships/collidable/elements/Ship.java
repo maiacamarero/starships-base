@@ -48,10 +48,12 @@ public class Ship extends Collidable {
 
     public Ship move(Vector direction){
         Ship ship;
+        int newX = (int) (getPosition().getX() + getSpeed() * getDirection().getX());
+        int newY = (int) (getPosition().getY() - getSpeed() * getDirection().getY());
         if (direction.getX() == 0 && direction.getY() == 0){
-            ship = setDirectionSpeed(direction, 0.0);
+            ship = setDirectionSpeedPosition(direction, 0.0, getPosition());
         }else {
-            ship = setDirectionSpeed(direction, 4.0);
+            ship = setDirectionSpeedPosition(direction, 4.0, new Vector(newX, newY));
         }
         return ship;
     }
@@ -64,12 +66,16 @@ public class Ship extends Collidable {
         return new Ship(getId(), getPosition().sum(position), getRotationInDegrees(), getHeight(), getWidth(),getPlayerId(), lastBulletShot, getDirection(), getSpeed(),bulletType, isVisible(), getHealth());
     }
 
+    public Ship setSpeed(double speed){
+        return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(),getPlayerId(), lastBulletShot, getDirection(), getSpeed() + speed,bulletType, isVisible(), getHealth());
+    }
+
     public Ship setRotationInDegrees(double rotationInDegrees){
         return new Ship(getId(), getPosition(), getRotationInDegrees() + rotationInDegrees, getHeight(), getWidth(),getPlayerId(), lastBulletShot, getDirection(), getSpeed(),bulletType, isVisible(), getHealth());
     }
 
-    public Ship setDirectionSpeed(Vector direction, double speed){
-        return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection().sum(direction), getSpeed() + speed,bulletType,isVisible(), getHealth());
+    public Ship setDirectionSpeedPosition(Vector direction, double speed, Vector position){
+        return new Ship(getId(), getPosition().sum(position), getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection().sum(direction), getSpeed() + speed,bulletType,isVisible(), getHealth());
     }
 
     public boolean canShoot(){

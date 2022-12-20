@@ -46,12 +46,13 @@ public class Bullet extends Collidable {
         return bulletType;
     }
 
-//    private Bullet move() {
-//        int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection() / 360));
-//        int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection() / 360));
-//        Vector newVector = new Vector(newX, newY);
-//        return new Bullet(getId(), newVector,getRotationInDegrees(),getHeight(),getWidth(),getDirection(),ship, damage, bulletType);
-//    }
+    private Bullet move() {
+        //Bullet bullet = null;
+        int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
+        int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
+        Vector newVector = new Vector(newX, newY);
+        return (Bullet) setPosition(newVector);
+    }
 
     public int getDamage() {
         return damage;

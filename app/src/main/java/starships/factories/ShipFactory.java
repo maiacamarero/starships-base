@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShipFactory {
-    public static List<Collidable> generate(int amountOfShips, List<Player> players){
+    public List<Collidable> generate(List<Player> players){
+        int amountOfShips = players.size();
         List<Collidable> listToReturn = new ArrayList<>();
         for (int i = 1; i < amountOfShips+1; i++) {
             String id = "starship-" + i;

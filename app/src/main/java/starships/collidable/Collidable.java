@@ -1,8 +1,6 @@
 package starships.collidable;
 
 import starships.collidable.elements.Asteroid;
-import starships.collidable.elements.Bullet;
-import starships.collidable.elements.Ship;
 
 public class Collidable {
 

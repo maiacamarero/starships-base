@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerFactory {
-    public static List<Player> generate(GameConfiguration config){
+    public List<Player> generate(GameConfiguration config){
         int amount = config.getAmountOfPlayers();
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < amount; i++) {

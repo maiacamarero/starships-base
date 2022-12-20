@@ -15,8 +15,10 @@ import javafx.scene.control.Label
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
+import starships.GameConfiguration
 import starships.Juego
 import starships.collidable.*
+import starships.factories.GameFactory
 import kotlin.system.exitProcess
 
 fun main() {
@@ -32,7 +34,8 @@ class Starships : Application() {
         val STARSHIP = ImageRef("starship", 70.0, 70.0)
         val BULLET = ImageRef("bullet2", 70.0, 70.0)
         val ASTEROID = ImageRef("asteroid", 70.0, 70.0)
-        var juego = Juego()
+        var gameFactory = GameFactory()
+        var juego = gameFactory.generate(false,  GameConfiguration())
     }
 
     override fun start(primaryStage: Stage) {
@@ -112,7 +115,7 @@ class Starships : Application() {
         newGame.setOnMouseClicked {
             primaryStage.scene.root = pane
             //game.start(false)
-            juego.start(false)
+            //juego.start(false)
             addElements()
         }
 
@@ -131,7 +134,7 @@ class Starships : Application() {
         loadGame.setOnMouseClicked {
             primaryStage.scene.root = pane
             //game.start(true)
-            juego.start(true)
+            //juego.start(true)
             addElements()
         }
         loadGame.setOnMouseEntered {
@@ -287,7 +290,7 @@ class KeyPressedListener( private var juego: Juego, private val starships: Stars
             map["right-1"] -> juego = juego.move("starship-1", Vector(1, 1))
             map["rotate-left-1"] -> juego = juego.rotate("starship-1", -5.0)
             map["rotate-right-1"] -> juego = juego.rotate("starship-1", 5.0)
-
+            map["shoot-1"] -> juego= juego.shoot("starship-1")
 
 //            map["rotate-left-1"] -> game = game.rotate("starship-1", -5)
 //            map["rotate-right-1"] -> game = game.rotate("starship-1", 5)
