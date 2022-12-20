@@ -12,7 +12,7 @@ public class PlayerFactory {
         int amount = config.getAmountOfPlayers();
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
-            players.add(new Player("player-" + i, new Health(config.getAmountOfLives()), "starship-" + i + 1));
+            players.add(new Player("player-" + i, new Health(config.getAmountOfLives()), "starship-" + i ));
         }
         return players;
     }

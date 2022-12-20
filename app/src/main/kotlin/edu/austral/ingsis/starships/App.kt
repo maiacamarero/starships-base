@@ -15,9 +15,8 @@ import javafx.scene.control.Label
 import javafx.scene.layout.HBox
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
-import starships.Game
+import starships.Juego
 import starships.collidable.*
-import java.util.StringJoiner
 import kotlin.system.exitProcess
 
 fun main() {
@@ -30,19 +29,19 @@ class Starships : Application() {
     private val keyTracker = KeyTracker()
 
     companion object {
-        val STARSHIP_BLUE = ImageRef("starship", 70.0, 70.0)
-        val BULLET_BLUE = ImageRef("bullet2", 70.0, 70.0)
+        val STARSHIP = ImageRef("starship", 70.0, 70.0)
+        val BULLET = ImageRef("bullet2", 70.0, 70.0)
         val ASTEROID = ImageRef("asteroid", 70.0, 70.0)
-        val game = Game()
+        var juego = Juego()
     }
 
     override fun start(primaryStage: Stage) {
         val pane = mainGameScene()
         val menu = menuScene(primaryStage, pane)
 
-        facade.timeListenable.addEventListener(TimeListener(facade.elements, game, facade, this))
-        facade.collisionsListenable.addEventListener(CollisionListener(game))
-        keyTracker.keyPressedListenable.addEventListener(KeyPressedListener(game, this, primaryStage, pane, menu))
+        facade.timeListenable.addEventListener(TimeListener(facade.elements, juego, facade, this))
+        facade.collisionsListenable.addEventListener(CollisionListener(juego))
+        keyTracker.keyPressedListenable.addEventListener(KeyPressedListener(juego,  this, primaryStage, pane, menu))
 
         keyTracker.scene = menu
         primaryStage.scene = menu
@@ -70,10 +69,10 @@ class Starships : Application() {
 
     fun getImage(element: Collidable) : ImageRef {
         if (element.collidableType == CollidableType.SHIP){
-            return STARSHIP_BLUE
+            return STARSHIP
         }
         return if (element.collidableType == CollidableType.BULLET){
-            BULLET_BLUE
+            BULLET
 
         } else ASTEROID
     }
@@ -87,7 +86,7 @@ class Starships : Application() {
     }
 
     private fun addElements(){
-        val elements = game.elements
+        val elements = juego.elements
         for (element in elements){
             facade.elements[element.id] = ElementModel(
                 element.id,
@@ -112,7 +111,8 @@ class Starships : Application() {
         newGame.style = "-fx-font-family: VT323; -fx-font-size: 45"
         newGame.setOnMouseClicked {
             primaryStage.scene.root = pane
-            game.start(false)
+            //game.start(false)
+            juego.start(false)
             addElements()
         }
 
@@ -130,7 +130,8 @@ class Starships : Application() {
         loadGame.style = "-fx-font-family: VT323; -fx-font-size: 45;"
         loadGame.setOnMouseClicked {
             primaryStage.scene.root = pane
-            game.start(true)
+            //game.start(true)
+            juego.start(true)
             addElements()
         }
         loadGame.setOnMouseEntered {
@@ -163,7 +164,7 @@ class Starships : Application() {
         resume.setOnMouseClicked {
             primaryStage.scene = menu
             primaryStage.scene.root = pane
-            game.pauseUnpauseGame()
+            juego.pause()
         }
 
         resume.setOnMouseEntered {
@@ -180,7 +181,7 @@ class Starships : Application() {
         saveGame.style = "-fx-font-family: VT323; -fx-font-size: 45;"
         saveGame.setOnMouseClicked {
             saveGame.textFill = Color.PURPLE
-            game.saveGame()
+            juego.saveGame()
             saved = true
         }
         saveGame.setOnMouseEntered {
@@ -203,7 +204,7 @@ class Starships : Application() {
         exitGame.textFill = Color.BLANCHEDALMOND
         exitGame.style = "-fx-font-family: VT323; -fx-font-size: 45;"
         exitGame.setOnMouseClicked {
-            game.printLeaderBoard()
+            juego.printLeaderBoard()
             stop()
         }
         exitGame.setOnMouseEntered {
@@ -229,16 +230,16 @@ class Starships : Application() {
     }
 }
 
-class TimeListener(private val elements: Map<String, ElementModel>, private val game: Game, private val facade: ElementsViewFacade, private val starships: Starships) : EventListener<TimePassed> {
+class TimeListener(private val elements: Map<String, ElementModel>,  private var juego: Juego, private val facade: ElementsViewFacade, private val starships: Starships) : EventListener<TimePassed> {
     override fun handle(event: TimePassed) {
-        if (game.hasFinished()){
-            game.printLeaderBoard()
+        if (juego.hasFinished()){
+            juego.printLeaderBoard()
             starships.stop()
         }
-        game.updateView()
-        val elementsInScreen = game.elements ?: return
+        juego.updateView()
+        val elementsInScreen = juego.elements ?: return
         for (element in elementsInScreen){
-            val elem = elements[element.id]
+            val elem = elements.get(element.id)
             if (elem != null){
                 elem.x.set(element.position.x.toDouble())
                 elem.y.set(element.position.y.toDouble())
@@ -247,7 +248,7 @@ class TimeListener(private val elements: Map<String, ElementModel>, private val 
                 elem.width.set(element.width)
             }else facade.elements[element.id] = ElementModel(element.id, element.position.x.toDouble(), element.position.y.toDouble(), element.height, element.width, element.rotationInDegrees, starships.adaptShape(element.collidableShape), starships.getImage(element))
         }
-        val deads = game.deadElements
+        val deads = juego.deadElements
         for (dead in deads){
             if (elements.containsKey(dead)){
                 facade.elements[dead] = null
@@ -256,37 +257,54 @@ class TimeListener(private val elements: Map<String, ElementModel>, private val 
     }
 }
 
-class CollisionListener(private val game: Game) : EventListener<Collision> {
+class CollisionListener(private val juego: Juego) : EventListener<Collision> {
     override fun handle(event: Collision) {
-        game.handleCollision(event.element1Id, event.element2Id)
+        juego.handleCollision(event.element1Id, event.element2Id)
     }
 }
 
-class KeyPressedListener(private val game: Game, private val starships: Starships, private val primaryStage: Stage, private val pane: StackPane, private val menu: Scene): EventListener<KeyPressed> {
+class KeyPressedListener( private var juego: Juego, private val starships: Starships, private val primaryStage: Stage, private val pane: StackPane, private val menu: Scene): EventListener<KeyPressed> {
     override fun handle(event: KeyPressed) {
-        val map = game.keyboardConfig()
-        if (event.key == KeyCode.S && game.isPaused) {
-            game.saveGame()
+        val map = juego.keyboardConfig()
+        if (event.key == KeyCode.S && juego.isPaused) {
+            juego.saveGame()
         }
         when(event.key) {
-            map["accelerate-1"] -> game.moveShip("starship-1", true)
-            map["stop-1"] -> game.moveShip("starship-1", false)
-            map["rotate-left-1"] -> game.rotate("starship-1", -5)
-            map["rotate-right-1"] -> game.rotate("starship-1", 5)
-            map["shoot-1"] -> game.shoot("starship-1")
-            map["accelerate-2"] -> game.moveShip("starship-2", true)
-            map["stop-2"] -> game.moveShip("starship-2", false)
-            map["rotate-left-2"] -> game.rotate("starship-2", -5)
-            map["rotate-right-2"] -> game.rotate("starship-2", 5)
-            map["shoot-2"] -> game.shoot("starship-2")
-            map["left-1"] -> game.moveShipX("starship-1", true)
-            map["left-2"] -> game.moveShipX("starship-2", true)
-            map["right-2"] -> game.moveShipX("starship-2", false)
-            map["right-1"] -> game.moveShipX("starship-1", false)
+//            map["accelerate-1"] -> game = game.moveShip("starship-1")
+//            map["stop-1"] -> game =game.moveShip("starship-1")
+//            map["rotate-left-1"] -> game =game.rotate("starship-1", -5)
+//            map["rotate-right-1"] -> game =game.rotate("starship-1", 5)
+//            map["shoot-1"] -> game =game.shoot("starship-1")
+//            map["accelerate-2"] -> game =game.moveShip("starship-2")
+//            map["stop-2"] -> game =game.moveShip("starship-2")
+//            map["rotate-left-2"] -> game =game.rotate("starship-2", -5)
+//            map["rotate-right-2"] -> game =game.rotate("starship-2", 5)
+//            map["shoot-2"] -> game =game.shoot("starship-2")
+
+            map["accelerate-1"] -> juego = juego.move("starship-1", Vector(0, -1))
+            map["stop-1"] -> juego = juego.move("starship-1", Vector(0, 1))
+            map["left-1"] -> juego = juego.move("starship-1", Vector(-1, 1))
+            map["right-1"] -> juego = juego.move("starship-1", Vector(1, 1))
+            map["rotate-left-1"] -> juego = juego.rotate("starship-1", -5.0)
+            map["rotate-right-1"] -> juego = juego.rotate("starship-1", 5.0)
+
+
+//            map["rotate-left-1"] -> game = game.rotate("starship-1", -5)
+//            map["rotate-right-1"] -> game = game.rotate("starship-1", 5)
+//            map["shoot-1"] -> game = game.shoot("starship-1")
+
+//            map["accelerate-2"] -> juego = juego.move("starship-2", Vector(0, -1))
+//            map["stop-2"] -> juego = juego.move("starship-2", Vector(0, 1))
+//            map["left-2"] -> juego = juego.move("starship-2", Vector(-1, 1))
+//            map["right-2"] -> juego = juego.move("starship-2", Vector(1, 1))
+//            map["rotate-left-2"] -> game = game.rotate("starship-2", -5)
+//            map["rotate-right-2"] -> game = game.rotate("starship-2", 5)
+//            map["shoot-2"] -> game = game.shoot("starship-2")
+
 
             KeyCode.P -> {
-                game.pauseUnpauseGame()
-                if (game.isPaused){
+                juego.pause()
+                if (juego.isPaused){
                     primaryStage.scene = starships.pauseScene(primaryStage, pane, menu)
                 }
             }

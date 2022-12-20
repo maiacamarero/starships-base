@@ -8,8 +8,8 @@ public class Bullet extends Collidable {
     private final int damage;
     private final BulletType bulletType;
 
-    public Bullet(String id, Position position, double rotationInDegrees, double height, double width, double direction, String shipID, int damage, BulletType bulletType) {
-        super(id, CollidableType.BULLET, position, rotationInDegrees, height, width, CollidableShape.RECTANGULAR, direction);
+    public Bullet(String id, Vector position, double rotationInDegrees, double height, double width, Vector direction, String shipID, int damage, BulletType bulletType, double speed, boolean isVisible) {
+        super(id, CollidableType.BULLET, position, rotationInDegrees, height, width, CollidableShape.RECTANGULAR, direction, speed, new Health(1), isVisible);
         this.ship = shipID;
         this.damage = damage;
         this.bulletType = bulletType;
@@ -19,28 +19,39 @@ public class Bullet extends Collidable {
         return this.ship;
     }
 
-    @Override
-    public Collidable update(){
-        if (!isInBounds()){
-            return null;
-        }return move();
+    public Bullet update(){
+        if (isVisible()){
+            if (getSpeed() > 0){
+                int newX = (int) (getPosition().getX() + getSpeed() * getDirection().getX());
+                int newY = (int) (getPosition().getY() + getSpeed() * getDirection().getY());
+                if (isInBounds()){
+                    return (Bullet) setPosition(new Vector(newX, newY));
+                }else return (Bullet) setIsVisible(false);
+            }
+        }
+        return this;
     }
 
-    @Override
-    public Collidable getNewElementColisionable() {
-        return new Bullet(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getDirection(), getShipId(), damage, bulletType);
-    }
+//    public Collidable getNewElementCollidable() {
+//        return new Bullet(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getDirection(), getShipId(), damage, bulletType);
+//    }
+
+//    public boolean isInBounds(){
+//        if ((getPosition().getX() > (0-getHeight())) && (getPosition().getX()<(800+getHeight())) && (getPosition().getY() > (0-getHeight())) && (getPosition().getX()<(800+getHeight()))){
+//            return true;
+//        }else return false;
+//    }
 
     public BulletType getBulletType() {
         return bulletType;
     }
 
-    private Bullet move() {
-        int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection() / 360));
-        int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection() / 360));
-        Position newPosition = new Position(newX, newY);
-        return new Bullet(getId(), newPosition,getRotationInDegrees(),getHeight(),getWidth(),getDirection(),ship, damage, bulletType);
-    }
+//    private Bullet move() {
+//        int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection() / 360));
+//        int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection() / 360));
+//        Vector newVector = new Vector(newX, newY);
+//        return new Bullet(getId(), newVector,getRotationInDegrees(),getHeight(),getWidth(),getDirection(),ship, damage, bulletType);
+//    }
 
     public int getDamage() {
         return damage;

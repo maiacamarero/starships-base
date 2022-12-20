@@ -25,10 +25,10 @@ public class Setup{
         return lines;
     }
 
-    public void saveGame(State state){
+    public static void saveGame(State state){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(getDirectory()))){
             for (Collidable element : state.getElements()) {
-                String toWrite = getStringToWriteColisionable(element);
+                String toWrite = getStringToWriteCollidable(element);
                 writer.write(toWrite + "\n");
             }
             writer.write("%\n");
@@ -42,53 +42,71 @@ public class Setup{
         }
     }
 
-    private String getStringToWritePlayer(Player player) {
-        return "id:" + player.getPlayerId() + ";points:" + player.getPoints() + ";lives:" + player.getHealth().getValue() ;
+    private static String getStringToWritePlayer(Player player) {
+        return "id:" + player.getPlayerId() + ";points:" + player.getPoints() + ";lives:" + player.getHealth().getValue() + ";shipId:" + player.getShipId() ;
     }
 
-    private String getDirectory() {
+    private static String getDirectory() {
         return "/Users/maiacamarero/IdeaProjects/starships-base/app/src/main/java/starships/txtFiles/config";
     }
 
-    private String getStringToWriteColisionable(Collidable collidable) {
-        String str = "id:" + collidable.getId() + ";type:" + collidable.getCollidableType().toString() + ";xPosition:" + collidable.getPosition().getX() + ";yPosition:" + collidable.getPosition().getY() + ";rotation:" + collidable.getRotationInDegrees() + ";direction:" + collidable.getDirection()
-                + ";height:" + collidable.getHeight() + ";width:" + collidable.getWidth() + ";shape:" + collidable.getCollidableShape();
+    private static String getStringToWriteCollidable(Collidable collidable) {
+        String str = "id:" + collidable.getId()
+                + ";type:" + collidable.getCollidableType().toString()
+                + ";xPosition:" + collidable.getPosition().getX()
+                + ";yPosition:" + collidable.getPosition().getY()
+                + ";rotationInDegrees:" + collidable.getRotationInDegrees()
+                + ";xDirection:" + collidable.getDirection().getX()
+                + ";yDirection:" + collidable.getDirection().getY()
+                + ";height:" + collidable.getHeight()
+                + ";width:" + collidable.getWidth()
+                + ";shape:" + collidable.getCollidableShape().toString()
+                + ";health:" + collidable.getHealth().getValue()
+                + ";speed:" + collidable.getSpeed();
         return str + parameters(collidable);
     }
 
-    private String parameters(Collidable collidable) {
+    private static String parameters(Collidable collidable) {
         switch (collidable.getCollidableType()){
             case SHIP -> {
                 Ship ship = (Ship) collidable;
-                return ";lastBulletShot:" + ship.getLastBulletShot() + ";playerId:" + ship.getPlayerId() + ";boost:" + ship.getAccelerate() + ";bulletType:" + ship.getBulletType();
+                return ";lastBulletShot:" + ship.getLastBulletShot()
+                        + ";playerId:" + ship.getPlayerId()
+                        + ";bulletType:" + ship.getBulletType()
+                        + ";amountOfShots:" + ship.getAmountOfShots();
             }
             case BULLET -> {
                 Bullet bullet = (Bullet) collidable;
-                return ";shipId:" + bullet.getShipId() + ";damage:" + bullet.getDamage() + ";bulletType:" + bullet.getBulletType();
+                return ";shipId:" + bullet.getShipId()
+                        + ";damage:" + bullet.getDamage()
+                        + ";bulletType:" + bullet.getBulletType();
             }
             case ASTEROID -> {
                 Asteroid asteroid = (Asteroid) collidable;
-                return ";clockwise:" + asteroid.isClockwise() + ";initialHealth:" + asteroid.getInitialHealth() + ";currentHealth:" + asteroid.getCurrentHealth();
+                return ";clockwise:" + asteroid.isClockwise()
+                        + ";initialHealth:" + asteroid.getInitialHealth()
+                        + ";currentHealth:" + asteroid.getCurrentHealth();
             }
         };
         return "";
     }
 
-    public State getSavedState(){
+    public static State getSavedState(){
         List<String> configLines = getLines(getDirectory());
         List<String> stringElements = null;
         List<String> stringPlayers = null;
         for (int i = 0; i < configLines.size(); i++) {
-            stringElements = configLines.subList(0, i);
-            stringPlayers = configLines.subList(i+1, configLines.size());
+            stringElements = configLines.subList(0, 0);
+            stringPlayers = configLines.subList(1, configLines.size());
             break;
         }
+        assert stringElements != null;
         List<Collidable> elements = getSavedElements(stringElements);
         List<Player> players = getSavedPlayers(stringPlayers);
         return new State(elements, players);
     }
 
-    private List<Collidable> getSavedElements(List<String> stringElements) {
+    private static List<Collidable> getSavedElements(List<String> stringElements) {
         List<Collidable> elements = new ArrayList<>();
         for (String stringElement : stringElements){
             String[] s = stringElement.split(";");
@@ -97,42 +115,50 @@ public class Setup{
             int xPosition = (int) transform(s[2]);
             int yPosition = (int) transform(s[3]);
             int rotation = (int) transform(s[4]);
-            int direction = (int) transform(s[5]);
-            int height = (int) transform(s[6]);
-            int width = (int) transform(s[7]);
-            Position position = new Position(xPosition, yPosition);
-            elements.add(createElement(s, id, type, position, rotation, direction, height, width));
+            int xDirection = (int) transform(s[5]);
+            int yDirection = (int) transform(s[6]);
+            int height = (int) transform(s[7]);
+            int width = (int) transform(s[8]);
+            String shape = (String) transform(s[9]);
+            int health = (int) transform(s[10]);
+            int speed = (int) transform(s[11]);
+
+            Vector position = new Vector(xPosition, yPosition);
+            Vector direction = new Vector(xDirection, yDirection);
+            elements.add(createElement(s, id, type, position, rotation, direction, height, width, shape, health, speed));
         }
         return elements;
     }
 
-    private Collidable createElement(String[] s, String id, String type, Position position, int rotation, int direction, int height, int width) {
+    private static Collidable createElement(String[] s, String id, String type, Vector position, int rotationInDegrees, Vector direction, int height, int width, String shape, int health, int speed) {
         switch (type){
             case "SHIP" -> {
-                long lastBulletShot = (long) transform(s[10]);
-                String playerId = (String) transform(s[11]);
-                double boost = (double) transform(s[12]);
-                return new Ship(id, position, rotation, height, width, playerId, lastBulletShot, direction, boost, getBulletType());
+                long lastBulletShot = (long) transform(s[12]);
+                String playerId = (String) transform(s[13]);
+                String bulletType = (String) transform(s[14]);
+                int amountOfShots = (int) transform(s[15]);
+                return new Ship(id, position, rotationInDegrees, height, width, playerId, lastBulletShot, direction, speed, getBulletType(), true, new Health(health));
             }
             case "ASTEROID" -> {
-                boolean clockwise = (boolean) transform(s[10]);
-                int initialHealth = (int) transform(s[11]);
-                int currentHealth = (int) transform(s[12]);
-                return new Asteroid(id, position, rotation, height, width, direction, clockwise, new Health(initialHealth), new Health(currentHealth));
+                boolean clockwise = (boolean) transform(s[12]);
+                int initialHealth = (int) transform(s[13]);
+                int currentHealth = (int) transform(s[14]);
+                return new Asteroid(id, position, rotationInDegrees, height, width, direction, speed, new Health(health), true, clockwise, new Health(initialHealth), new Health(currentHealth));
             }
             case "BULLET" -> {
-                String shipId = (String) transform(s[10]);
-                int damage = (int) transform(s[11]);
-                return new Bullet(id, position, rotation, height, width, direction, shipId, damage, getBulletType());
+                String shipId = (String) transform(s[12]);
+                int damage = (int) transform(s[13]);
+                return new Bullet(id, position, rotationInDegrees, height, width, direction, shipId, damage, getBulletType(), speed, true);
             }
         }
-        return null;    }
-
-    private BulletType getBulletType() {
-        return BulletType.LIGHTNING;
+        return null;
     }
 
-    private List<Player> getSavedPlayers(List<String> stringPlayers) {
+    private static BulletType getBulletType() {
+        return BulletType.NORMAL;
+    }
+
+    private static List<Player> getSavedPlayers(List<String> stringPlayers) {
         List<Player> players = new ArrayList<>();
         for (String stringPlayer : stringPlayers) {
             String[] s = stringPlayer.split(";");
@@ -152,9 +178,9 @@ public class Setup{
         String value = str[1];
         return switch (variable){
             case "id", "playerId", "type", "shape", "shipId", "bulletType" -> value;
-            case "points", "lives", "initialHealth", "currentHealth", "damage" -> Integer.parseInt(value);
+            case "xDirection", "yDirection","xPosition", "yPosition","points", "lives", "initialHealth", "currentHealth", "damage" -> Integer.parseInt(value);
             case "clockwise" -> Boolean.parseBoolean(value);
-            case "xPosition", "yPosition", "rotation", "direction", "height", "width", "boost" -> Double.parseDouble(value);
+            case  "rotationInDegrees", "height", "width", "speed" -> Double.parseDouble(value);
             case "lastBulletShot" -> Long.parseLong(value);
             default -> "";
         };

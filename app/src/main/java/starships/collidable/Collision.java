@@ -1,6 +1,7 @@
 package starships.collidable;
 
 import starships.Game;
+import starships.Juego;
 import starships.Player;
 import starships.State;
 import starships.collidable.elements.Asteroid;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Collision {
-    public static State handleCollision(Collidable collidable, Collidable otherCollidable, State state, Game game) {
+    public static State handleCollision(Collidable collidable, Collidable otherCollidable, State state, Juego game) {
         List<Collidable> elements = state.getElements();
         List<Player> players = state.getPlayers();
         State newState = null;
@@ -29,7 +30,7 @@ public class Collision {
         return newState;
     }
 
-    private static State manageBulletAsteroidCollision(Collidable collidable, Collidable otherCollidable, List<Collidable> elements, List<Player> players, Game game) {
+    private static State manageBulletAsteroidCollision(Collidable collidable, Collidable otherCollidable, List<Collidable> elements, List<Player> players, Juego game) {
         Bullet bullet;
         Asteroid asteroid;
         if (collidable.getCollidableType() == CollidableType.BULLET){
@@ -47,9 +48,11 @@ public class Collision {
             if (bullet.getId().equals(element.getId())) {
                 game.addDeadElements(element.getId());
             } else if (element.getId().equals(asteroid.getId())) {
-                Asteroid newAsteroid = new Asteroid(asteroid.getId(), asteroid.getPosition(), asteroid.getRotationInDegrees(), asteroid.getHeight(), asteroid.getWidth(), asteroid.getDirection(), asteroid.isClockwise(), asteroid.getInitialHealth(), asteroid.getCurrentHealth().reduce(bullet.getDamage()));
+                Asteroid newAsteroid = (Asteroid) asteroid.setHealth(asteroid.getCurrentHealth().reduce(bullet.getDamage()));
+                //Asteroid newAsteroid = new Asteroid(asteroid.getId(), asteroid.getPosition(), asteroid.getRotationInDegrees(), asteroid.getHeight(), asteroid.getWidth(), asteroid.getDirection(), asteroid.isClockwise(), asteroid.getInitialHealth(), asteroid.getCurrentHealth().reduce(bullet.getDamage()));
                 if (newAsteroid.getCurrentHealth().getValue() <= 0) {
-                    newPlayer = new Player(currentPlayer.getPlayerId(), currentPlayer.getPoints() + newAsteroid.getPoints(), currentPlayer.getHealth(), currentPlayer.getShipId());
+                    //newPlayer = new Player(currentPlayer.getPlayerId(), currentPlayer.getPoints() + newAsteroid.getPoints(), currentPlayer.getHealth(), currentPlayer.getShipId());
+                    newPlayer = currentPlayer.setPoints(currentPlayer.getPoints() + newAsteroid.getPoints());
                     game.addPoints(newPlayer.getPlayerId(), newAsteroid.getPoints());
                     game.addDeadElements(element.getId());
                 } else {
@@ -57,7 +60,7 @@ public class Collision {
                     newPlayer = new Player(currentPlayer.getPlayerId(), currentPlayer.getPoints(), currentPlayer.getHealth(), currentPlayer.getShipId());
                 }
             } else {
-                newElements.add(element.getNewElementColisionable());
+                newElements.add(element.getNewElementCollidable());
             }
         }
         for (Player player : players) {
@@ -70,7 +73,7 @@ public class Collision {
         return new State(newElements, newPlayers);
     }
 
-    private static State manageShipAsteroidCollision(Collidable collidable, Collidable otherCollidable, List<Collidable> elements, List<Player> players, Game game) {
+    private static State manageShipAsteroidCollision(Collidable collidable, Collidable otherCollidable, List<Collidable> elements, List<Player> players, Juego game) {
         Ship ship;
         Asteroid asteroid;
         if (collidable.getCollidableType() == CollidableType.SHIP){
@@ -86,9 +89,16 @@ public class Collision {
         Player newPlayer = null;
         for (Collidable element : elements){
             if (ship.getId().equals(element.getId())){
-                newPlayer = new Player(player.getPlayerId(), player.getPoints(), player.getHealth().reduce(-1), player.getShipId());
+                //newPlayer = new Player(player.getPlayerId(), player.getPoints(), player.getHealth().reduce(-1), player.getShipId());
+                newPlayer = player.setHealth(player.getHealth().reduce(1));
                 if (newPlayer.getHealth().getValue() > 0){
-                    newElements.add(new Ship(ship.getId(), new Position(300, 300), 180, ship.getHeight(), ship.getWidth(), ship.getPlayerId(), ship.getLastBulletShot(), 180, 0, ship.getBulletType()));
+                    ship.setPosition(new Vector(300, 300));
+                    ship.setRotationInDegrees(180);
+                    ship.setDirection(new Vector(180, 180));
+                    ship.setSpeed(0);
+                    ship.setIsVisible(true);
+                    newElements.add(ship);
+                    //newElements.add(new Ship(ship.getId(), new Vector(300, 300), 180, ship.getHeight(), ship.getWidth(), ship.getPlayerId(), ship.getLastBulletShot(), 180, 0, ship.getBulletType()));
                 }else {
                     game.addDeadElements(element.getId());
                     newPlayer = null;
@@ -96,7 +106,7 @@ public class Collision {
             }else if (element.getId().equals(asteroid.getId())){
                 game.addDeadElements(element.getId());
             }else {
-                newElements.add(element.getNewElementColisionable());
+                newElements.add(element.getNewElementCollidable());
             }
         }
         for(Player player1 : players){
@@ -107,11 +117,12 @@ public class Collision {
                 newPlayers.add(player1.getNewPlayer());
             }
         }
-        if (newPlayers.isEmpty()) game.finishGame();
+        if (newPlayers.isEmpty()) game.setFinished(true);
         return new State(newElements, newPlayers);
     }
 
-    private static State manageBulletShipCollision(Collidable collidable, Collidable otherCollidable, List<Collidable> elements, List<Player> players, Game game) {
+    //immutabel
+    private static State manageBulletShipCollision(Collidable collidable, Collidable otherCollidable, List<Collidable> elements, List<Player> players, Juego game) {
         Bullet bullet;
         Ship ship;
         if (collidable.getCollidableType() == CollidableType.BULLET){
@@ -121,7 +132,7 @@ public class Collision {
             bullet = (Bullet) otherCollidable;
             ship = (Ship) collidable;
         }
-        if (Objects.equals(ship.getId(), bullet.getShipId())) return null;
+        //if (Objects.equals(ship.getId(), bullet.getShipId())) return null;
         List<Collidable> newElements = new ArrayList<>();
         List<Player> newPlayers = new ArrayList<>();
         Player currentPlayer = getPlayer(ship.getPlayerId(), players);
@@ -131,15 +142,22 @@ public class Collision {
                 game.addDeadElements(element.getId());
             } else if (element.getId().equals(ship.getId())) {
                 assert currentPlayer != null;
-                newPlayer = new Player(currentPlayer.getPlayerId(),currentPlayer.getPoints(), new Health(currentPlayer.getHealth().reduce( 1).getValue()), currentPlayer.getShipId());
+                //newPlayer = new Player(currentPlayer.getPlayerId(),currentPlayer.getPoints(), new Health(currentPlayer.getHealth().reduce( 1).getValue()), currentPlayer.getShipId());
+                newPlayer = currentPlayer.setHealth(new Health(currentPlayer.getHealth().reduce( 1).getValue()));
                 if (newPlayer.getHealth().getValue() > 0){
                     //reset position
-                    newElements.add(new Ship(ship.getId(),new Position(300, 300),180, ship.getHeight(),ship.getWidth(),ship.getPlayerId(),ship.getLastBulletShot(),180,0, ship.getBulletType()));
+                    ship.setPosition(new Vector(300, 300));
+                    ship.setRotationInDegrees(180);
+                    ship.setDirection(new Vector(180, 180));
+                    ship.setSpeed(0);
+                    ship.setIsVisible(true);
+                    newElements.add(ship);
+                    //newElements.add(new Ship(ship.getId(),new Vector(300, 300),180, ship.getHeight(),ship.getWidth(),ship.getPlayerId(),ship.getLastBulletShot(),direction 180,speed 0, ship.getBulletType()));
                 } else{
                     game.addDeadElements(ship.getId());
                 }
             } else{
-                newElements.add(element.getNewElementColisionable());
+                newElements.add(element.getNewElementCollidable());
             }
         }
         for (Player player : players){
@@ -152,12 +170,19 @@ public class Collision {
                 newPlayers.add(player.getNewPlayer());
             }
         }
-        if (newPlayers.isEmpty()) game.finishGame();
+        if (newPlayers.isEmpty()) game.setFinished(true);
         return new State(newElements, newPlayers);
     }
 
     private static Player getPlayer(String playerId, List<Player> players) {
+
         for (Player player : players) {
+//            System.out.println("-");
+//            System.out.println("playerid " + playerId);
+//            System.out.println("otherplayer "+player.getPlayerId());
+//            System.out.println(playerId == (player.getPlayerId()));
+//            System.out.println("-");
+
             if (playerId.equals(player.getPlayerId())) {
                 return player;
             }
@@ -173,6 +198,8 @@ public class Collision {
                 playerId = ship.getPlayerId();
             }
         }
+
+        //System.out.println(playerId);
         return getPlayer(playerId, players);
     }
 }

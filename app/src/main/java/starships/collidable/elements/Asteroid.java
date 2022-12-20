@@ -8,42 +8,38 @@ public class Asteroid extends Collidable {
     private final Health initialHealth;
     private final Health currentHealth;
 
-    public Asteroid(String id, Position position, double rotationInDegrees, double height, double width, double direction, boolean clockwise, Health initialHealth, Health currentHealth) {
-        super(id, CollidableType.ASTEROID, position, rotationInDegrees, height, width, CollidableShape.ELLIPTICAL, direction);
+    public Asteroid(String id, Vector position, double rotationInDegrees, double height, double width, Vector direction, double speed, Health health, boolean isVisible, boolean clockwise, Health initialHealth, Health currentHealth) {
+        super(id, CollidableType.ASTEROID, position, rotationInDegrees, height, width, CollidableShape.ELLIPTICAL, direction, speed, health, isVisible);
         this.clockwise = clockwise;
         this.initialHealth = initialHealth;
         this.currentHealth = currentHealth;
     }
 
-    @Override
-    public Collidable update(){
-        if (isOutOfBounds(3, 3)){
-            return null;
-        }return move();
-    }
-
-    private boolean isOutOfBounds(int shift1, int shift2){
-        if (!isInBounds(new Position(getPosition().getX() + shift1, getPosition().getY() + shift2))){
-            return true;
-        }else return false;
-    }
-
-    @Override
-    public Collidable getNewElementColisionable() {
-        return new Asteroid(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getDirection(), clockwise, initialHealth, currentHealth);
+    public Asteroid update(){
+        if (isVisible()){
+            if (getSpeed() > 0){
+                int newX = (int) (getPosition().getX() + getSpeed() * getDirection().getX());
+                int newY = (int) (getPosition().getY() + getSpeed() * getDirection().getY());
+                if (isInBounds()){
+                    Asteroid asteroid = (Asteroid) setPosition(new Vector(newX, newY));
+                    return (Asteroid) asteroid.setRotationInDegrees(getRotationInDegrees() + 1);
+                }else return (Asteroid) setIsVisible(false);
+            }
+        }
+        return this;
     }
 
     private Collidable move() {
-        int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection() / 360));
-        int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection() / 360));
+        int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
+        int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
         double newRotationInDegrees;
-        Position newPosition = new Position(newX, newY);
+        Vector newVector = new Vector(newX, newY);
         if (clockwise) {
             newRotationInDegrees = getRotationInDegrees() + 2;
         } else {
             newRotationInDegrees = getRotationInDegrees() - 2;
         }
-        return new Asteroid(getId(), newPosition, newRotationInDegrees, getHeight(), getWidth(), getDirection(), clockwise, initialHealth, currentHealth);
+        return new Asteroid(getId(), newVector, newRotationInDegrees, getHeight(), getWidth(), getDirection(),getSpeed(), getHealth(),isVisible(), clockwise, initialHealth, currentHealth);
     }
 
     public boolean isClockwise() {

@@ -1,10 +1,10 @@
 package starships.collidable;
 
-public class Position {
+public class Vector {
     private final int x;
     private final int y;
 
-    public Position(int x, int y) {
+    public Vector(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -17,7 +17,7 @@ public class Position {
         return y;
     }
 
-    public Position sum(Position position){
-        return new Position(this.x + position.getX(), this.y + position.getY());
+    public Vector sum(Vector vector){
+        return new Vector(this.x + vector.getX(), this.y + vector.getY());
     }
 }
