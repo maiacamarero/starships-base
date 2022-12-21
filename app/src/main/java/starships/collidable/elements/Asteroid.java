@@ -16,20 +16,6 @@ public class Asteroid extends Collidable {
     }
 
     public Asteroid update(){
-        if (isVisible()){
-            if (getSpeed() > 0){
-                int newX = (int) (getPosition().getX() + getSpeed() * getDirection().getX());
-                int newY = (int) (getPosition().getY() + getSpeed() * getDirection().getY());
-                if (isInBounds()){
-                    Asteroid asteroid = (Asteroid) setPosition(new Vector(newX, newY));
-                    return (Asteroid) asteroid.setRotationInDegrees(getRotationInDegrees() + 1);
-                }else return (Asteroid) setIsVisible(false);
-            }
-        }
-        return this;
-    }
-
-    private Collidable move() {
         int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
         int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
         double newRotationInDegrees;
@@ -40,7 +26,21 @@ public class Asteroid extends Collidable {
             newRotationInDegrees = getRotationInDegrees() - 2;
         }
         return new Asteroid(getId(), newVector, newRotationInDegrees, getHeight(), getWidth(), getDirection(),getSpeed(), getHealth(),isVisible(), clockwise, initialHealth, currentHealth);
+
     }
+
+//    private Collidable move() {
+//        int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
+//        int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
+//        double newRotationInDegrees;
+//        Vector newVector = new Vector(newX, newY);
+//        if (clockwise) {
+//            newRotationInDegrees = getRotationInDegrees() + 2;
+//        } else {
+//            newRotationInDegrees = getRotationInDegrees() - 2;
+//        }
+//        return new Asteroid(getId(), newVector, newRotationInDegrees, getHeight(), getWidth(), getDirection(),getSpeed(), getHealth(),isVisible(), clockwise, initialHealth, currentHealth);
+//    }
 
     public boolean isClockwise() {
         return clockwise;

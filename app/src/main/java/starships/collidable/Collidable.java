@@ -129,39 +129,42 @@ public class Collidable {
         return new Collidable(getId(), getCollidableType(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getCollidableShape(), getDirection(), getSpeed(), getHealth(), isVisible());
     }
 
-//    public Collidable update(){
-//        int newX = (int) (getPosition().getX() - 3.5 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
-//        int newY = (int) (getPosition().getY() + 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
-//
-//
-//        if (collidableType == CollidableType.SHIP){
-//            if (speed > 0){
-//                if (!isInsideLimit(newX, newY)){
-//                    return setSpeed(0.0);
-//                }else return setSpeed(-5);
-//
-//            }
-//
-//        }else if (collidableType == CollidableType.ASTEROID){
-//            if (isVisible()){
-//                if (speed > 0){
-//                    if (isInBounds()){
-//                        Asteroid asteroid = (Asteroid) setPosition(new Vector(newX, newY));
-//                        return asteroid.setRotationInDegrees(getRotationInDegrees() + 1);
-//                    }else return setIsVisible(false);
-//                }
-//            }
-//        }else {
-//            if (isVisible()){
-//                if (speed > 0){
-//                    if (isInBounds()){
-//                        return setPosition(new Vector(newX, newY));
-//                    }else return setIsVisible(false);
-//                }
-//            }
-//        }
-//        return this;
-//    }
+    public Collidable update(){
+        int newX = (int) (getPosition().getX() - 3.5 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
+        int newY = (int) (getPosition().getY() + 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
+
+
+        if (collidableType == CollidableType.SHIP){
+            if (speed > 0){
+                if (!isInsideLimit(newX, newY)){
+                    return setSpeed(0.0);
+                }else return setSpeed(-5);
+
+            }
+
+        }else if (collidableType == CollidableType.ASTEROID){
+            int newX1 = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
+            int newY1 = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
+            double newRotationInDegrees;
+            Vector newVector = new Vector(newX1, newY1);
+
+            newRotationInDegrees = getRotationInDegrees() - 2;
+            this.setRotationInDegrees(newRotationInDegrees);
+            this.setPosition(newVector);
+            return this;
+
+
+        }else {
+            if (isVisible()){
+                if (speed > 0){
+                    if (isInBounds()){
+                        return setPosition(new Vector(newX, newY));
+                    }else return setIsVisible(false);
+                }
+            }
+        }
+        return this;
+    }
 
     public boolean isInsideLimit(int x, int y){
         return x > 0 && x < 725 && y > 0 && y < 700;

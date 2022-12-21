@@ -60,7 +60,7 @@ public class Juego {
     }
 
     public Juego updateView() {
-        State newState = state.copy();
+        State newState = null;
         List<Collidable> currentElements = state.getElements();
         List<Collidable> asteroids = asteroidFactory.generate(currentElements);
         if (!paused && state != null) {
@@ -97,7 +97,8 @@ public class Juego {
                     entered = true;
                 }else newState = state.setCollidable(element);
                 //newState = state.setCollidable(element.update());
-                //Collidable newElement = element.update();
+                Collidable newElement = element.update();
+                newState = state.setCollidable(newElement);
 
             }
             if (!hasShip) return setFinished(true);
@@ -187,16 +188,6 @@ public class Juego {
             newPlayers.add(player.getNewPlayer());
         }
         return newPlayers;
-    }
-
-    private Player getPlayerByShip(Ship ship) {
-        String ownerId = ship.getPlayerId();
-        for (Player player : state.getPlayers()) {
-            if (player.getPlayerId().equals(ownerId)){
-                return player;
-            }
-        }
-        return null;
     }
 
     public List<Collidable> getElements() {

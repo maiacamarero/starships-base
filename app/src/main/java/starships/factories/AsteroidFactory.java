@@ -1,6 +1,5 @@
 package starships.factories;
 
-import starships.Player;
 import starships.collidable.*;
 import starships.collidable.elements.Asteroid;
 import starships.collidable.elements.Ship;
