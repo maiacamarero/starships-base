@@ -14,7 +14,7 @@ public class AsteroidFactory {
     private static int counter = 0;
     static Random random = new Random();
 
-    public static List<Collidable> generate(List<Collidable> elements){
+    public List<Collidable> generate(List<Collidable> elements){
         List<Collidable> newElements = new ArrayList<>();
         if (getAmountOfAsteroids(elements) < 10){
             List<Ship> ships = getCurrentsShips(elements);

@@ -7,11 +7,6 @@ public class GameFactory {
     private NewGameFactory newGameFactory = new NewGameFactory();
     private SavedGameFactory savedGameFactory = new SavedGameFactory();
 
-//    public GameFactory(NewGameFactory newGameFactory, SavedGameFactory savedGameFactory) {
-//        this.newGameFactory = newGameFactory;
-//        this.savedGameFactory = savedGameFactory;
-//    }
-
     public Juego generate(boolean resumeGame, GameConfiguration configuration){
         if (resumeGame){
             //paused = false;

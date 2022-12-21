@@ -1,16 +1,5 @@
 package starships;
 
-import javafx.scene.input.KeyCode;
-import starships.collidable.elements.Asteroid;
-import starships.collidable.elements.Bullet;
-import starships.collidable.elements.Ship;
-import starships.factories.AsteroidFactory;
-import starships.factories.BulletFactory;
-import starships.factories.PlayerFactory;
-import starships.factories.ShipFactory;
-import starships.collidable.*;
-
-import java.util.*;
 
 public class Game { // start, loadGame, saveGame, resetGame, loadOtherGame (uno que ya fue guardado)
 //                    // shoot, move y rotate ship, handle collision, update, pause or resumeGame

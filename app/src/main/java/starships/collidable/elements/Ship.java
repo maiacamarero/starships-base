@@ -32,12 +32,17 @@ public class Ship extends Collidable {
 //            int newX = (int) (getPosition().getX() + getSpeed() * getDirection().getX());
 //            int newY = (int) (getPosition().getY() - getSpeed() * getDirection().getY());
             int newX = (int) (getPosition().getX() - 3.5 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
-            int newY = (int) (getPosition().getY() - 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
+            int newY = (int) (getPosition().getY() + 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
 
-            Vector position = new Vector(newX, newY);
-            if (newX < 720 && newX > 0 && newY < 700 && newY > 0){
-                return setPosition(position);
-            }
+            if (!isInsideLimit(newX, newY)){
+                return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), playerId, lastBulletShot, getDirection(), 0.0, bulletType, isVisible(), getHealth());
+            }else return new Ship(getId(), new Vector(newX, newY), getRotationInDegrees(), getHeight(), getWidth(), playerId, lastBulletShot, getDirection(), getSpeed() - 5, bulletType, isVisible(), getHealth());
+
+
+//            Vector position = new Vector(newX, newY);
+//            if (newX < 720 && newX > 0 && newY < 700 && newY > 0){
+//                return setPosition(position);
+//            }
         }
         return getNewElementCollidable();
     }
@@ -50,11 +55,16 @@ public class Ship extends Collidable {
         Ship ship;
         int newX = (int) (getPosition().getX() - 3.5 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
         int newY = (int) (getPosition().getY() - 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
-        if (direction.getX() == 0 && direction.getY() == 0){
-            ship = setDirectionSpeedPosition(direction, 0.0, getPosition());
-        }else {
-            ship = setDirectionSpeedPosition(direction, 4.0, new Vector(-500, 500));
-        }
+        if (getSpeed() < 1000){
+            //if (direction.getX() == 0 && direction.getY() == 0){
+                ship = setDirectionSpeedPosition(direction, 70.0, new Vector(newX, newY));
+          //  }else {
+           // }
+        }else if (getSpeed()>0){
+            ship = setDirectionSpeedPosition(direction, -69.0, new Vector(newX, newY));
+
+        }else ship = getNewElementCollidable();
+
         return ship;
     }
 
@@ -96,5 +106,12 @@ public class Ship extends Collidable {
 
     public int getAmountOfShots() {
         return amountOfShots;
+    }
+
+    public boolean isInsideLimit(int x, int y){
+        return x > 0 && x < 725 && y > 0 && y < 700;
+    }
+    public boolean isInsideLimit(){
+        return getPosition().getX() > 0 && getPosition().getX() < 800 && getPosition().getY() > 0 && getPosition().getY() < 800;
     }
 }
