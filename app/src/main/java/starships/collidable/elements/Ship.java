@@ -33,7 +33,6 @@ public class Ship extends Collidable {
 //            int newY = (int) (getPosition().getY() - getSpeed() * getDirection().getY());
             int newX = (int) (getPosition().getX() - 3.5 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
             int newY = (int) (getPosition().getY() + 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
-
             if (!isInsideLimit(newX, newY)){
                 return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), playerId, lastBulletShot, getDirection(), 0.0, bulletType, isVisible(), getHealth());
             }else return new Ship(getId(), new Vector(newX, newY), getRotationInDegrees(), getHeight(), getWidth(), playerId, lastBulletShot, getDirection(), getSpeed() - 5, bulletType, isVisible(), getHealth());

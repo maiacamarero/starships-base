@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class AsteroidFactory {
 
-    private static int counter = 0;
+    private int counter = 0;
     static Random random = new Random();
 
     public List<Collidable> generate(List<Collidable> elements){
@@ -71,7 +71,7 @@ public class AsteroidFactory {
         return newElements;
     }
 
-    private static List<Ship> getCurrentsShips(List<Collidable> elements) {
+    private List<Ship> getCurrentsShips(List<Collidable> elements) {
         List<Ship> ships = new ArrayList<>();
         for (Collidable element : elements){
             if (element.getCollidableType() == CollidableType.SHIP){
@@ -81,7 +81,7 @@ public class AsteroidFactory {
         return ships;
     }
 
-    private static int getAmountOfAsteroids(List<Collidable> elements){
+    private int getAmountOfAsteroids(List<Collidable> elements){
         int amount = 0;
         for (Collidable element : elements) {
             if (element.getCollidableType() == CollidableType.ASTEROID){
@@ -91,11 +91,11 @@ public class AsteroidFactory {
         return amount;
     }
 
-    private static Ship getRandomShip(List<Ship> ships) {
+    private Ship getRandomShip(List<Ship> ships) {
         return ships.get(random.nextInt(ships.size()));
     }
 
-    private static int calculateHealth(int height, int width) {
+    private int calculateHealth(int height, int width) {
         return ((height * width) / 100);
     }
 
