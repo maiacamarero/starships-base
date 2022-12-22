@@ -324,10 +324,6 @@ class KeyPressedListener( private val container: GameContainer, private val star
                 val next = juego.shoot("starship-1")
                 container.setGame(next)
             }
-//            map["rotate-left-1"] -> game = game.rotate("starship-1", -5)
-//            map["rotate-right-1"] -> game = game.rotate("starship-1", 5)
-//            map["shoot-1"] -> game = game.shoot("starship-1")
-//
 
             map["accelerate-2"] -> {
                 val next = juego.move("starship-2", Vector(0, -1))
@@ -361,7 +357,9 @@ class KeyPressedListener( private val container: GameContainer, private val star
 
 
             KeyCode.P -> {
-                juego.pause()
+                val next = juego.pausar()
+                container.setGame(next)
+                //juego.pause()
                 if (juego.isPaused){
                     primaryStage.scene = starships.pauseScene(primaryStage, pane, menu)
                 }
