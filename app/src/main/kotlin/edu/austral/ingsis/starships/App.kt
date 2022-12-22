@@ -42,9 +42,11 @@ class Starships : Application() {
         val pane = mainGameScene()
         val menu = menuScene(primaryStage, pane)
 
-        facade.timeListenable.addEventListener(TimeListener(facade.elements, juego, facade, this))
-        facade.collisionsListenable.addEventListener(CollisionListener(juego))
-        keyTracker.keyPressedListenable.addEventListener(KeyPressedListener(juego,  this, primaryStage, pane, menu))
+
+        val container = GameContainer(juego)
+        facade.timeListenable.addEventListener(TimeListener(facade.elements, container, facade, this))
+        facade.collisionsListenable.addEventListener(CollisionListener(container))
+        keyTracker.keyPressedListenable.addEventListener(KeyPressedListener(container,  this, primaryStage, pane, menu))
 
         keyTracker.scene = menu
         primaryStage.scene = menu
@@ -231,13 +233,15 @@ class Starships : Application() {
     }
 }
 
-class TimeListener(private val elements: Map<String, ElementModel>, private var juego: Juego, private val facade: ElementsViewFacade, private val starships: Starships) : EventListener<TimePassed> {
+class TimeListener(private val elements: Map<String, ElementModel>, private val container: GameContainer, private val facade: ElementsViewFacade, private val starships: Starships) : EventListener<TimePassed> {
     override fun handle(event: TimePassed) {
+        var juego = container.getGame()
         if (juego.hasFinished()){
             juego.printLeaderBoard()
             starships.stop()
         }
         juego = juego.updateView()
+        container.setGame(juego)
 
         val elementsInScreen = juego.state.elements ?: return
         for (element in elementsInScreen){
@@ -260,14 +264,22 @@ class TimeListener(private val elements: Map<String, ElementModel>, private var 
     }
 }
 
-class CollisionListener(private val juego: Juego) : EventListener<Collision> {
+class CollisionListener(private val container: GameContainer) : EventListener<Collision> {
     override fun handle(event: Collision) {
-//        juego.handleCollision(event.element1Id, event.element2Id)
+        container.setGame(container.getGame().handleCollision(event.element1Id, event.element2Id))
     }
 }
 
-class KeyPressedListener( private var juego: Juego, private val starships: Starships, private val primaryStage: Stage, private val pane: StackPane, private val menu: Scene): EventListener<KeyPressed> {
+class GameContainer(private var game: Juego) {
+    fun getGame(): Juego = game
+    fun setGame(game: Juego) {
+        this.game = game
+    }
+}
+
+class KeyPressedListener( private val container: GameContainer, private val starships: Starships, private val primaryStage: Stage, private val pane: StackPane, private val menu: Scene): EventListener<KeyPressed> {
     override fun handle(event: KeyPressed) {
+        val juego = container.getGame()
         val map = juego.keyboardConfig()
         if (event.key == KeyCode.S && juego.isPaused) {
             juego.saveGame()
@@ -284,25 +296,68 @@ class KeyPressedListener( private var juego: Juego, private val starships: Stars
 //            map["rotate-right-2"] -> game =game.rotate("starship-2", 5)
 //            map["shoot-2"] -> game =game.shoot("starship-2")
 
-            map["accelerate-1"] -> juego = juego.move("starship-1", Vector(0, -50 ))
-            map["stop-1"] -> juego = juego.move("starship-1", Vector(0, 1))
-            map["left-1"] -> juego = juego.move("starship-1", Vector(-1, 1))
-            map["right-1"] -> juego = juego.move("starship-1", Vector(1, 1))
-//            map["rotate-left-1"] -> juego = juego.rotate("starship-1", -5.0)
-//            map["rotate-right-1"] -> juego = juego.rotate("starship-1", 5.0)
-//            map["shoot-1"] -> juego= juego.shoot("starship-1")
-
+            map["accelerate-1"] -> {
+                val next = juego.move("starship-1", Vector(0, -1 ))
+                container.setGame(next)
+            }
+            map["stop-1"] -> {
+                val next = juego.move("starship-1", Vector(0, 1))
+                container.setGame(next)
+            }
+            map["left-1"] -> {
+                val next = juego.move("starship-1", Vector(-1, 1))
+                container.setGame(next)
+            }
+            map["right-1"] -> {
+                val next = juego.move("starship-1", Vector(1, 1))
+                container.setGame(next)
+            }
+            map["rotate-left-1"] -> {
+                val next = juego.rotate("starship-1", -5.0)
+                container.setGame(next)
+            }
+            map["rotate-right-1"] -> {
+                val next = juego.rotate("starship-1", 5.0)
+                container.setGame(next)
+            }
+            map["shoot-1"] -> {
+                val next = juego.shoot("starship-1")
+                container.setGame(next)
+            }
 //            map["rotate-left-1"] -> game = game.rotate("starship-1", -5)
 //            map["rotate-right-1"] -> game = game.rotate("starship-1", 5)
 //            map["shoot-1"] -> game = game.shoot("starship-1")
+//
 
-//            map["accelerate-2"] -> juego = juego.move("starship-2", Vector(0, -1))
-//            map["stop-2"] -> juego = juego.move("starship-2", Vector(0, 1))
-//            map["left-2"] -> juego = juego.move("starship-2", Vector(-1, 1))
-//            map["right-2"] -> juego = juego.move("starship-2", Vector(1, 1))
-//            map["rotate-left-2"] -> game = game.rotate("starship-2", -5)
-//            map["rotate-right-2"] -> game = game.rotate("starship-2", 5)
-//            map["shoot-2"] -> game = game.shoot("starship-2")
+            map["accelerate-2"] -> {
+                val next = juego.move("starship-2", Vector(0, -1))
+                container.setGame(next)
+            }
+            map["stop-2"] -> {
+                val next = juego.move("starship-2", Vector(0, 1))
+                container.setGame(next)
+            }
+            map["left-2"] -> {
+                val next = juego.move("starship-2", Vector(-1, 1))
+                container.setGame(next)
+            }
+            map["right-2"] -> {
+                val next = juego.move("starship-2", Vector(1, 1))
+                container.setGame(next)
+            }
+            map["rotate-left-2"] -> {
+                val next = juego.rotate("starship-2", -5.0)
+                container.setGame(next)
+            }
+            map["rotate-right-2"] -> {
+                val next = juego.rotate("starship-2", 5.0)
+                container.setGame(next)
+            }
+            map["shoot-2"] -> {
+                val next = juego.shoot("starship-2")
+                container.setGame(next)
+            }
+
 
 
             KeyCode.P -> {
