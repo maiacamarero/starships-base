@@ -10,7 +10,7 @@ public class BulletFactory {
 
     private static int counter = 0;
 
-    public static Bullet generate(Ship ship){
+    public Bullet generate(Ship ship){
         String id = "bullet-" + counter++;
         Random random = new Random();
         int r = random.nextInt(2, 5);

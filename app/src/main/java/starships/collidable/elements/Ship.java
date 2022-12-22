@@ -50,21 +50,39 @@ public class Ship extends Collidable {
         return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getPlayerId(), lastBulletShot, getDirection(), getSpeed(), bulletType, isVisible(), getHealth());
     }
 
-    public Ship move(Vector direction){
+    public Ship move(Vector direction) {
         Ship ship;
         int newX = (int) (getPosition().getX() - 3.5 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
-        int newY = (int) (getPosition().getY() - 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
-        if (getSpeed() < 1000){
-            //if (direction.getX() == 0 && direction.getY() == 0){
-                ship = setDirectionSpeedPosition(direction, 70.0, new Vector(newX, newY));
-          //  }else {
-           // }
-        }else if (getSpeed()>0){
-            ship = setDirectionSpeedPosition(direction, -69.0, new Vector(newX, newY));
+        int newY = (int) (getPosition().getY() + 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
+//        if (getSpeed() < 1000){
+        if (direction.getX() == 0 && direction.getY() == 0) {
+            //ship = setDirectionSpeedPosition(direction, 70, new Vector(1, 1));
+            ship = setDirectionPosition(direction, new Vector(0, 0));
+            //  }else {
+            // }
+        }else {
+           ship = setDirectionPosition(direction,  new Vector(30, -30));
 
-        }else ship = getNewElementCollidable();
+//        }//else ship = getNewElementCollidable();
 
+        }
         return ship;
+
+    }
+
+    public Ship move1(boolean accelerate) {
+        if (accelerate){
+            if (getSpeed() < 1000){
+                return setSpeed(70);
+            }
+            return getNewElementCollidable();
+        }else {
+            if (getSpeed() > 0){
+                return setSpeed(-170);
+            }
+            return getNewElementCollidable();
+        }
+
     }
 
     public Ship rotate(double rotation){
@@ -73,6 +91,12 @@ public class Ship extends Collidable {
 
     public Ship setPosition(Vector position){
         return new Ship(getId(), getPosition().sum(position), getRotationInDegrees(), getHeight(), getWidth(),getPlayerId(), lastBulletShot, getDirection(), getSpeed(),bulletType, isVisible(), getHealth());
+    }
+    public Ship setDirection(Vector direction){
+        return new Ship(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(),getPlayerId(), lastBulletShot, getDirection().sum(direction), getSpeed(),bulletType, isVisible(), getHealth());
+    }
+    public Ship setDirectionPosition(Vector direction, Vector position){
+        return new Ship(getId(), getPosition().sum(position), getRotationInDegrees(), getHeight(), getWidth(),getPlayerId(), lastBulletShot, getDirection().sum(direction), getSpeed(),bulletType, isVisible(), getHealth());
     }
 
     public Ship setSpeed(double speed){

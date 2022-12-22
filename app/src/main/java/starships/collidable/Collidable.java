@@ -132,28 +132,20 @@ public class Collidable {
     public Collidable update(){
         int newX = (int) (getPosition().getX() - 3.5 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
         int newY = (int) (getPosition().getY() + 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
-
-
         if (collidableType == CollidableType.SHIP){
-            if (speed > 0){
-                if (!isInsideLimit(newX, newY)){
+            if (speed > 0 && !isInsideLimit(newX, newY)){
                     return setSpeed(0.0);
-                }else return setSpeed(-5);
-
-            }
+            }else return setSpeed(-5);
 
         }else if (collidableType == CollidableType.ASTEROID){
             int newX1 = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
             int newY1 = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
             double newRotationInDegrees;
-            Vector newVector = new Vector(newX1, newY1);
-
+            Vector newPosition = new Vector(newX1, newY1);
             newRotationInDegrees = getRotationInDegrees() - 2;
             this.setRotationInDegrees(newRotationInDegrees);
-            this.setPosition(newVector);
+            this.setPosition(newPosition);
             return this;
-
-
         }else {
             if (isVisible()){
                 if (speed > 0){

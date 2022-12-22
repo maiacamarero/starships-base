@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Random;
 
 public class AsteroidFactory {
-
     private int counter = 0;
     static Random random = new Random();
 
@@ -21,54 +20,60 @@ public class AsteroidFactory {
             Ship target = getRandomShip(ships);
             int sideOfScreen = random.nextInt(4);
             int number = random.nextInt(800);
-            Vector direction;
             assert target != null;
             switch (sideOfScreen){
                 case 0 -> {
                     x = number;
                     y = 0;
-                    if (target.getPosition().getX() > number){
-                        direction = new Vector(target.getPosition().getX() + number, target.getPosition().getY());
-                    }else {
-                        direction = new Vector(target.getPosition().getX() - number, target.getPosition().getY());
-                    }
+//                    if (target.getPosition().getX() > number){
+//                        direction = new Vector(target.getPosition().getX() + number, target.getPosition().getY());
+//                    }else {
+//                        direction = new Vector(target.getPosition().getX() - number, target.getPosition().getY());
+//                    }
                 }
                 case 1 -> {
                     x = 0;
                     y = number;
-                    if (target.getPosition().getY() > number){
-                        direction = new Vector(target.getPosition().getX(), target.getPosition().getY() + number);
-                    }else {
-                        direction = new Vector(target.getPosition().getX(), target.getPosition().getY() - number);
-                    }
+//                    if (target.getPosition().getY() > number){
+//                        direction = new Vector(target.getPosition().getX(), target.getPosition().getY() + number);
+//                    }else {
+//                        direction = new Vector(target.getPosition().getX(), target.getPosition().getY() - number);
+//                    }
                 }
                 case 2 -> {
                     x = number;
                     y = 800;
-                    if (target.getPosition().getX() > number){
-                        direction = new Vector(target.getPosition().getX() + number, -target.getPosition().getY());
-                    }else {
-                        direction = new Vector(target.getPosition().getX() - number, -target.getPosition().getY());
-                    }
+//                    if (target.getPosition().getX() > number){
+//                        direction = new Vector(target.getPosition().getX() + number, -target.getPosition().getY());
+//                    }else {
+//                        direction = new Vector(target.getPosition().getX() - number, -target.getPosition().getY());
+//                    }
                 }
                 default -> {
                     x = 800;
                     y = number;
-                    if (target.getPosition().getY() > number){
-                        direction = new Vector(-target.getPosition().getX(), target.getPosition().getY() + number);
-                    }else {
-                        direction = new Vector(-target.getPosition().getX(), target.getPosition().getY() - number);
-                    }
+//                    if (target.getPosition().getY() > number){
+//                        direction = new Vector(-target.getPosition().getX(), target.getPosition().getY() + number);
+//                    }else {
+//                        direction = new Vector(-target.getPosition().getX(), target.getPosition().getY() - number);
+//                    }
                 }
             }
+            Vector direction = getDirection(x, y, target);
+
             Vector position = new Vector(x, y);
             String id = "asteroid-" + counter++;
             int height = random.nextInt(10, 150);
             int width = random.nextInt(80, 150);
             Health health = new Health(calculateHealth(height, width));
-            newElements.add(new Asteroid(id, position, 100, height, width, direction, 0.0015, health, random.nextBoolean(), random.nextBoolean(), health, health));
+            newElements.add(new Asteroid(id, position, 100, height, width, direction, 6, health, random.nextBoolean(), random.nextBoolean(), health, health));
         }
         return newElements;
+    }
+
+    private Vector getDirection(int x, int y, Ship target) {
+        return new Vector(target.getPosition().getX() - x + random.nextInt(), target.getPosition().getY() - y + random.nextInt());
+        //return Math.toDegrees(Math.atan2(target.getPosition().getX() - x, target.getPosition().getY() - y)) + random.nextDouble(20);
     }
 
     private List<Ship> getCurrentsShips(List<Collidable> elements) {
