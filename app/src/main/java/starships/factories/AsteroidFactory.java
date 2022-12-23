@@ -9,14 +9,13 @@ import java.util.List;
 import java.util.Random;
 
 public class AsteroidFactory {
-    private static int counter = 0;
-    static Random random = new Random();
+    private int counter = 0;
+    Random random = new Random();
 
-    public static List<Collidable> generate(List<Collidable> elements){
+    public List<Collidable> generate(List<Collidable> elements){
         List<Collidable> newElements = new ArrayList<>();
         int amountOfAsteroids = getAmountOfAsteroids(elements);
-        if (amountOfAsteroids < 5){
-            //if (getAmountOfAsteroids(elements) < 10){
+        if (amountOfAsteroids < 10){
                 List<Ship> ships = getCurrentsShips(elements);
                 int x, y;
                 Ship target = getRandomShip(ships);
@@ -28,38 +27,18 @@ public class AsteroidFactory {
                     case 0 -> {
                         x = number;
                         y = 0;
-//                        if (target.getPosition().getX() > number){
-//                            direction = new Vector(target.getPosition().getX() + number, target.getPosition().getY());
-//                        }else {
-//                            direction = new Vector(target.getPosition().getX() - number, target.getPosition().getY());
-//                        }
                     }
                     case 1 -> {
                         x = 0;
                         y = number;
-//                        if (target.getPosition().getY() > number){
-//                            direction = new Vector(target.getPosition().getX(), target.getPosition().getY() + number);
-//                        }else {
-//                            direction = new Vector(target.getPosition().getX(), target.getPosition().getY() - number);
-//                        }
                     }
                     case 2 -> {
                         x = number;
                         y = 794;
-//                        if (target.getPosition().getX() > number){
-//                            direction = new Vector(target.getPosition().getX() + number, -target.getPosition().getY());
-//                        }else {
-//                            direction = new Vector(target.getPosition().getX() - number, -target.getPosition().getY());
-//                        }
                     }
                     default -> {
                         x = 794;
                         y = number;
-//                        if (target.getPosition().getY() > number){
-//                            direction = new Vector(-target.getPosition().getX(), target.getPosition().getY() + number);
-//                        }else {
-//                            direction = new Vector(-target.getPosition().getX(), target.getPosition().getY() - number);
-//                        }
                     }
                 }
                 Vector direction = getDirection(x, y, target);
@@ -69,17 +48,16 @@ public class AsteroidFactory {
                 int width = random.nextInt(50, 150);
                 Health health = new Health(calculateHealth(height, width));
                 newElements.add(new Asteroid(id, position, 180, height, width, direction, 10, health, random.nextBoolean(), random.nextBoolean(), health, health));
-           // }
         }
         return newElements;
     }
 
-    private static Vector getDirection(int x, int y, Ship target) {
-        return new Vector(target.getDirection().getX() - x, target.getDirection().getY() - y);
+    private Vector getDirection(int x, int y, Ship target) {
+        return new Vector(target.getDirection().getX() - x + random.nextInt(20), target.getDirection().getY() - y + random.nextInt(20));
         //return Math.toDegrees(Math.atan2(target.getPosition().getX() - x, target.getPosition().getY() - y)) + random.nextDouble(20);
     }
 
-    private static List<Ship> getCurrentsShips(List<Collidable> elements) {
+    private List<Ship> getCurrentsShips(List<Collidable> elements) {
         List<Ship> ships = new ArrayList<>();
         for (Collidable element : elements){
             if (element.getCollidableType() == CollidableType.SHIP){
@@ -89,7 +67,7 @@ public class AsteroidFactory {
         return ships;
     }
 
-    private static int getAmountOfAsteroids(List<Collidable> elements){
+    private int getAmountOfAsteroids(List<Collidable> elements){
         int amount = 0;
         for (Collidable element : elements) {
             if (element.getCollidableType() == CollidableType.ASTEROID && element.isVisible()){
@@ -99,11 +77,11 @@ public class AsteroidFactory {
         return amount;
     }
 
-    private static Ship getRandomShip(List<Ship> ships) {
+    private Ship getRandomShip(List<Ship> ships) {
         return ships.get(random.nextInt(ships.size()));
     }
 
-    private static int calculateHealth(int height, int width) {
+    private int calculateHealth(int height, int width) {
         return ((height * width) / 100);
     }
 

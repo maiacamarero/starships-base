@@ -5,7 +5,6 @@ import starships.collidable.Collidable;
 import starships.collidable.CollidableType;
 import starships.collidable.Collision;
 import starships.collidable.Vector;
-import starships.collidable.elements.Asteroid;
 import starships.collidable.elements.Bullet;
 import starships.collidable.elements.Ship;
 import starships.factories.AsteroidFactory;
@@ -125,7 +124,7 @@ public class Juego {
             for (Collidable gameObject : state.getElements()){
                 if (gameObject.getCollidableType() == CollidableType.SHIP) hasShip = true;
                 if (gameObject.getCollidableType() != CollidableType.SHIP && !entered){
-                    asteroids = manageMeteorSpawn(state);
+                    asteroids = spawnAsteroids(state);
                     for (Collidable asteroid : asteroids) {
                         newState = state.setCollidable(asteroid);
                     }
@@ -140,7 +139,7 @@ public class Juego {
             if (!hasShip) hasFinished();
             if (state.getElements().size() == state.getPlayers().size()){
                 assert newState != null;
-                asteroids = manageMeteorSpawn(state);
+                asteroids = spawnAsteroids(state);
                 for (Collidable asteroid : asteroids) {
                     newState = state.setCollidable(asteroid);
                 }
@@ -150,8 +149,8 @@ public class Juego {
         return setState(newState);
     }
 
-    private List<Collidable> manageMeteorSpawn(State state) {
-        List<Collidable> meteors = AsteroidFactory.generate(state.getElements());;
+    private List<Collidable> spawnAsteroids(State state) {
+        List<Collidable> meteors = asteroidFactory.generate(state.getElements());;
         for (Collidable gameObject : state.getElements()){
             if (gameObject.getCollidableType() == CollidableType.ASTEROID){
                 meteors.add(gameObject);

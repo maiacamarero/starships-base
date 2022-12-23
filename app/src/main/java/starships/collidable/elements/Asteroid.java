@@ -21,35 +21,34 @@ public class Asteroid extends Collidable {
         double newRotationInDegrees = 0;
         Vector newPosition = new Vector(newX, newY);
 
-        if (!runOut(3,3)){
-            if (clockwise) {
+        if (isInBounds()){
+            if (isClockwise()) {
                 newRotationInDegrees = getRotationInDegrees() + 2;
             } else {
                 newRotationInDegrees = getRotationInDegrees() - 2;
             }
-
+        }else {
+             return this.setIsVisible(false);
         }
         return new Asteroid(getId(), newPosition, newRotationInDegrees, getHeight(), getWidth(), getDirection(), getSpeed(), getHealth(), isVisible(), clockwise, initialHealth, currentHealth);
 
+    }
 
+    public Asteroid setIsVisible(boolean isVisible){
+        return new Asteroid(getId(), getPosition(), getRotationInDegrees(), getHeight(), getWidth(), getDirection(), getSpeed(), getHealth(), isVisible, clockwise, getInitialHealth(), getCurrentHealth());
+    }
+
+    public Asteroid setRotation( double rotation){
+        return new Asteroid(getId(), getPosition(), getRotationInDegrees() + rotation, getHeight(), getWidth(), getDirection(), getSpeed(), getHealth(), getNewElementCollidable().isVisible(), clockwise, getInitialHealth(), getCurrentHealth());
     }
 
     private boolean runOut(int shiftx, int shifty) {
         return !isInsideLimit(getPosition().getX()+shiftx, getPosition().getY()+shifty);
     }
 
-//    private Collidable move() {
-//        int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
-//        int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
-//        double newRotationInDegrees;
-//        Vector newVector = new Vector(newX, newY);
-//        if (clockwise) {
-//            newRotationInDegrees = getRotationInDegrees() + 2;
-//        } else {
-//            newRotationInDegrees = getRotationInDegrees() - 2;
-//        }
-//        return new Asteroid(getId(), newVector, newRotationInDegrees, getHeight(), getWidth(), getDirection(),getSpeed(), getHealth(),isVisible(), clockwise, initialHealth, currentHealth);
-//    }
+    public boolean isInBounds(){
+        return getPosition().getX() > (0-getWidth()) && getPosition().getX() < (1000+getWidth()) && getPosition().getY() > (0-getHeight()) && getPosition().getY() < (1000+getHeight());
+    }
 
     public boolean isClockwise() {
         return clockwise;
