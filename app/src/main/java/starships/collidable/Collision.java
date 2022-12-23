@@ -6,6 +6,7 @@ import starships.State;
 import starships.collidable.elements.Asteroid;
 import starships.collidable.elements.Bullet;
 import starships.collidable.elements.Ship;
+import starships.factories.PlayerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class Collision {
         }
         List<Collidable> newElements = new ArrayList<>();
         List<Player> newPlayers = new ArrayList<>();
-        Player currentPlayer = getPlayer(bullet.getShipId(), players, elements);
+        Player currentPlayer = getPlayer(bullet.getShipId(), game);
         Player newPlayer = null;
         for (Collidable element : elements) {
             if (bullet.getId().equals(element.getId())) {
@@ -51,11 +52,13 @@ public class Collision {
                 //Asteroid newAsteroid = new Asteroid(asteroid.getId(), asteroid.getPosition(), asteroid.getRotationInDegrees(), asteroid.getHeight(), asteroid.getWidth(), asteroid.getDirection(), asteroid.isClockwise(), asteroid.getInitialHealth(), asteroid.getCurrentHealth().reduce(bullet.getDamage()));
                 if (newAsteroid.getCurrentHealth().getValue() <= 0) {
                     //newPlayer = new Player(currentPlayer.getPlayerId(), currentPlayer.getPoints() + newAsteroid.getPoints(), currentPlayer.getHealth(), currentPlayer.getShipId());
+                    assert currentPlayer != null;
                     newPlayer = currentPlayer.setPoints(currentPlayer.getPoints() + newAsteroid.getPoints());
                     game.addPoints(newPlayer.getPlayerId(), newAsteroid.getPoints());
                     game.addDeadElements(element.getId());
                 } else {
                     newElements.add(newAsteroid);
+                    assert currentPlayer != null;
                     newPlayer = new Player(currentPlayer.getPlayerId(), currentPlayer.getPoints(), currentPlayer.getHealth(), currentPlayer.getShipId());
                 }
             } else {
@@ -84,7 +87,8 @@ public class Collision {
         }
         List<Collidable> newElements = new ArrayList<>();
         List<Player> newPlayers = new ArrayList<>();
-        Player player = getPlayer(ship.getPlayerId(), players, elements);
+//        Player player = getPlayer(ship.getPlayerId(), elements, game);
+        Player player = getPlayer(ship.getPlayerId(), game);
         Player newPlayer = null;
         for (Collidable element : elements){
             if (ship.getId().equals(element.getId())){
@@ -134,7 +138,7 @@ public class Collision {
         //if (Objects.equals(ship.getId(), bullet.getShipId())) return null;
         List<Collidable> newElements = new ArrayList<>();
         List<Player> newPlayers = new ArrayList<>();
-        Player currentPlayer = getPlayer(ship.getPlayerId(), players);
+        Player currentPlayer = getPlayer(ship.getPlayerId(), game);
         Player newPlayer = null;
         for (Collidable element : elements){
             if (bullet.getId().equals(element.getId())){
@@ -173,26 +177,12 @@ public class Collision {
         return new State(newElements, newPlayers);
     }
 
-    private Player getPlayer(String playerId, List<Player> players) {
-        Player playerToReturn = null;
-        for (Player player : players) {
-            if (playerId.equals(player.getPlayerId())) {
-                playerToReturn = player;
+    private Player getPlayer(String playerId, Juego juego) {
+        for (Player player : juego.getState().getPlayers()) {
+            if (player.getPlayerId().equals(playerId)){
+                return player;
             }
         }
-        return playerToReturn;
-    }
-
-    private Player getPlayer(String shipId, List<Player> players, List<Collidable> collidables) {
-        String playerId = "";
-        for (Collidable value : collidables) {
-            if (value.getCollidableType() == CollidableType.SHIP && Objects.equals(value.getId(), shipId)) {
-                Ship ship = (Ship) value;
-                playerId = ship.getPlayerId();
-            }
-        }
-
-        //System.out.println(playerId);
-        return getPlayer(playerId, players);
+        return null;
     }
 }
