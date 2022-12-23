@@ -117,14 +117,14 @@ public class Juego {
 
     public Juego update(){
         State newState = null;
-        List<Collidable> asteroids;
-        if (!paused && state != null){
+        List<Collidable> asteroids= spawnAsteroids(state);
+        if (!paused){
             boolean hasShip = false;
             boolean entered = false;
             for (Collidable gameObject : state.getElements()){
                 if (gameObject.getCollidableType() == CollidableType.SHIP) hasShip = true;
                 if (gameObject.getCollidableType() != CollidableType.SHIP && !entered){
-                    asteroids = spawnAsteroids(state);
+                    //asteroids = spawnAsteroids(state);
                     for (Collidable asteroid : asteroids) {
                         newState = state.setCollidable(asteroid);
                     }
@@ -139,7 +139,7 @@ public class Juego {
             if (!hasShip) hasFinished();
             if (state.getElements().size() == state.getPlayers().size()){
                 assert newState != null;
-                asteroids = spawnAsteroids(state);
+                //asteroids = spawnAsteroids(state);
                 for (Collidable asteroid : asteroids) {
                     newState = state.setCollidable(asteroid);
                 }
