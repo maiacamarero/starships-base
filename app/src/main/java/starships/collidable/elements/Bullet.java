@@ -22,10 +22,10 @@ public class Bullet extends Collidable {
     public Bullet update(){
         //if (isVisible()){
             //if (getSpeed() > 0){
-                int newX = (int) (getPosition().getX() + getDirection().getX());
-                int newY = (int) (getPosition().getY() - getDirection().getY());
+                int newX = (getPosition().getX() + getDirection().getX());
+                int newY = (getPosition().getY() - getDirection().getY());
                 if (isInBounds()){
-                    return setPosition(new Vector(newX, newY));
+                    return setPosition(new Vector(getPosition().getX() +10, getPosition().getY() + 10));
                 }//else return setIsVisible(false);
             //}
        // }

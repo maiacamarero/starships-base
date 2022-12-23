@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class AsteroidFactory {
-    private int counter = 0;
+    private int counter;
     Random random = new Random();
 
     public List<Collidable> generate(List<Collidable> elements){
@@ -20,7 +20,7 @@ public class AsteroidFactory {
                 int x, y;
                 Ship target = getRandomShip(ships);
                 int sideOfScreen = random.nextInt(4);
-                int number = random.nextInt(800);
+                int number = random.nextInt(80);
                 assert target != null;
 
                 switch (sideOfScreen){
@@ -43,11 +43,11 @@ public class AsteroidFactory {
                 }
                 Vector direction = getDirection(x, y, target);
                 Vector position = new Vector(x, y);
-                String id = "asteroid-" + ++counter;
+                String id = "asteroid-" + target.getId().substring(9).concat(String.valueOf(random.nextInt(0, 100)));
                 int height = random.nextInt(50, 150);
                 int width = random.nextInt(50, 150);
                 Health health = new Health(calculateHealth(height, width));
-                newElements.add(new Asteroid(id, position, 180, height, width, direction, 10, health, random.nextBoolean(), random.nextBoolean(), health, health));
+                newElements.add(new Asteroid(id, position, 180, height, width, direction, 10, health, true, true, health, health));
         }
         return newElements;
     }

@@ -16,15 +16,15 @@ public class BulletFactory {
         int r = random.nextInt(2, 5);
 
         return new Bullet(id,
-                new Vector(ship.getPosition().getX()+16, 140),
-                ship.getRotationInDegrees()-2,
+                new Vector(ship.getPosition().getX()+16, ship.getPosition().getY()),
+                ship.getRotationInDegrees(),
                 r*12,
                 r*4,
                 ship.getDirection(),
                 ship.getId(),
-                r,
+                r*13,
                 ship.getBulletType(),
-                ship.getSpeed(),
+                1,
                 ship.isVisible());
     }
 }

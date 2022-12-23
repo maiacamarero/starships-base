@@ -22,7 +22,6 @@ public class Juego {
 
     private boolean paused;
     private final boolean finished;
-    private final AsteroidFactory asteroidFactory;
 
     public Juego(List<String> deadElements, Map<String, Integer> points, GameConfiguration configuration, State state, boolean paused, boolean finished) {
         this.deadElements = deadElements;
@@ -31,7 +30,7 @@ public class Juego {
         this.state = state;
         this.paused = paused;
         this.finished = finished;
-        this.asteroidFactory = new AsteroidFactory();
+        //this.asteroidFactory = new AsteroidFactory();
     }
 
     public Juego setState(State state){
@@ -51,113 +50,45 @@ public class Juego {
         return setState(newState);
     }
 
-//    public Juego updateView() {
-//        State newState = null;
-//        List<Collidable> currentElements = state.getElements();
-//        List<Collidable> asteroids;
-//        Collidable newElement = null;
-//        if (!paused) {
-////            AsteroidFactory.generate(state.getElements());
-////            for (Collidable element : state.getElements()) {
-////                if (element.getCollidableType() == CollidableType.SHIP){
-////                    Ship ship = (Ship) element;
-////                    Ship newShip = ship.update();
-////                    newState = state.setCollidable(newShip);
-////                } else if (element.getCollidableType() == CollidableType.BULLET) {
-////                    Bullet bullet = (Bullet) element;
-////                    Bullet newBullet = bullet.update();
-////                    newState = state.setCollidable(newBullet);
-////                }else if (element.getCollidableType() == CollidableType.ASTEROID){
-////                    Asteroid asteroid = (Asteroid) element;
-////                    Asteroid newAsteroid = asteroid.update();
-////                    newState = state.setCollidable(newAsteroid);
-////                }
-////            }
-//            boolean hasShip = false;
-//            boolean entered = false;
-//            asteroidFactory.generate(currentElements);
-//
-//            for (Collidable element : currentElements) {
-//                if (element.getCollidableType() == CollidableType.SHIP) {
-//                    hasShip = true;
-//                    //newState = state.setCollidable(element);
-//                    Collidable newShip = element.update();
-//                    newState = state.setCollidable(newShip);
-//                }
-//
-//                if (element.getCollidableType() != CollidableType.SHIP && !entered) {
-//                    asteroids = asteroidFactory.generate(currentElements);
-//                    for (Collidable asteroid : asteroids) {
-//                        newElement = asteroid.update();
-//                        break;
-//                    }
-//                    newState = state.setCollidable(newElement);
-//                    entered = true;
-//                }//else newState = state.setCollidable(element);
-//                //newState = state.setCollidable(element.update());
-//            }
-//            if (!hasShip) return setFinished(true);
-//            if (newState.getElements().size() == newState.getPlayers().size()) {
-//                asteroids = asteroidFactory.generate(currentElements);
-//                for (Collidable asteroid : asteroids) {
-//                    //if (element1.getCollidableType() == CollidableType.ASTEROID) {
-//                    //int i = 0;
-//                    //while (i < 20){
-//                        newState = state.setCollidable(asteroid);
-//                      //  i++;
-//                    //}
-//                        //newState = state.setCollidable(asteroid);
-//                    //}
-//                }
-//            }
-//        }
-//        return setState(newState);
-//
-//    }
-
     public Juego update(){
         State newState = null;
-        List<Collidable> asteroids= spawnAsteroids(state);
+        List<Collidable> asteroids;
         if (!paused){
             boolean hasShip = false;
             boolean entered = false;
-            for (Collidable gameObject : state.getElements()){
-                if (gameObject.getCollidableType() == CollidableType.SHIP) hasShip = true;
-                if (gameObject.getCollidableType() != CollidableType.SHIP && !entered){
-                    //asteroids = spawnAsteroids(state);
+            for (Collidable element : state.getElements()){
+                if (element.getCollidableType() == CollidableType.SHIP) hasShip = true;
+                if (element.getCollidableType() != CollidableType.SHIP && !entered){
+                    asteroids = spawnAsteroids(state);
                     for (Collidable asteroid : asteroids) {
                         newState = state.setCollidable(asteroid);
                     }
                     entered = true;
                 }
-                Collidable newGameObject = gameObject.update();
-                if (newGameObject != null) newState = state.setCollidable(newGameObject);
-                else{
-                    addDeadElements(gameObject.getId());
-                }
+                Collidable newElement = element.update();
+                if (newElement != null) newState = state.setCollidable(newElement);
             }
             if (!hasShip) hasFinished();
             if (state.getElements().size() == state.getPlayers().size()){
                 assert newState != null;
-                //asteroids = spawnAsteroids(state);
+                asteroids = spawnAsteroids(newState);
                 for (Collidable asteroid : asteroids) {
                     newState = state.setCollidable(asteroid);
                 }
             }
         }
-
         return setState(newState);
     }
 
     private List<Collidable> spawnAsteroids(State state) {
-        List<Collidable> meteors = asteroidFactory.generate(state.getElements());;
-        for (Collidable gameObject : state.getElements()){
-            if (gameObject.getCollidableType() == CollidableType.ASTEROID){
-                meteors.add(gameObject);
+        AsteroidFactory asteroidFactory = new AsteroidFactory();
+        List<Collidable> asteroids = asteroidFactory.generate(state.getElements());;
+        for (Collidable element : state.getElements()){
+            if (element.getCollidableType() == CollidableType.ASTEROID){
+                asteroids.add(element);
             }
         }
-
-        return meteors;
+        return asteroids;
     }
 
     public Juego handleCollision(String id, String id2){

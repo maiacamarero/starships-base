@@ -18,6 +18,8 @@ public class Asteroid extends Collidable {
     public Asteroid update(){
         int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
         int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
+//        int newX = (int) (getPosition().getX() + getSpeed() * getDirection().getX());
+//        int newY = (int) (getPosition().getY() + getSpeed() *  getDirection().getY());
         double newRotationInDegrees = 0;
         Vector newPosition = new Vector(newX, newY);
 
@@ -28,7 +30,7 @@ public class Asteroid extends Collidable {
                 newRotationInDegrees = getRotationInDegrees() - 2;
             }
         }else {
-             return this.setIsVisible(false);
+             return this.setPosition(new Vector(-100, -100));
         }
         return new Asteroid(getId(), newPosition, newRotationInDegrees, getHeight(), getWidth(), getDirection(), getSpeed(), getHealth(), isVisible(), clockwise, initialHealth, currentHealth);
 
@@ -40,6 +42,9 @@ public class Asteroid extends Collidable {
 
     public Asteroid setRotation( double rotation){
         return new Asteroid(getId(), getPosition(), getRotationInDegrees() + rotation, getHeight(), getWidth(), getDirection(), getSpeed(), getHealth(), getNewElementCollidable().isVisible(), clockwise, getInitialHealth(), getCurrentHealth());
+    }
+    public Asteroid setPosition( Vector position){
+        return new Asteroid(getId(), position, getRotationInDegrees(), getHeight(), getWidth(), getDirection(), getSpeed(), getHealth(), getNewElementCollidable().isVisible(), clockwise, getInitialHealth(), getCurrentHealth());
     }
 
     private boolean runOut(int shiftx, int shifty) {
