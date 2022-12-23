@@ -18,20 +18,25 @@ public class Asteroid extends Collidable {
     public Asteroid update(){
         int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
         int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
-        double newRotationInDegrees;
-        Vector newVector = new Vector(newX, newY);
-        if (clockwise) {
-            newRotationInDegrees = getRotationInDegrees() + 2;
-        } else {
-            newRotationInDegrees = getRotationInDegrees() - 2;
+        double newRotationInDegrees = 0;
+        Vector newPosition = new Vector(newX, newY);
+
+        if (!runOut(3,3)){
+            if (clockwise) {
+                newRotationInDegrees = getRotationInDegrees() + 2;
+            } else {
+                newRotationInDegrees = getRotationInDegrees() - 2;
+            }
+
         }
-        return new Asteroid(getId(), newVector, newRotationInDegrees, getHeight(), getWidth(), getDirection(), getSpeed(), getHealth(), isVisible(), clockwise, initialHealth, currentHealth);
+        return new Asteroid(getId(), newPosition, newRotationInDegrees, getHeight(), getWidth(), getDirection(), getSpeed(), getHealth(), isVisible(), clockwise, initialHealth, currentHealth);
+
 
     }
 
-//    private boolean runOut(int shiftx, int shifty) {
-//        return isInsideLimit(getPosition().getX()+shiftx, getPosition().getY()+shifty);
-//    }
+    private boolean runOut(int shiftx, int shifty) {
+        return !isInsideLimit(getPosition().getX()+shiftx, getPosition().getY()+shifty);
+    }
 
 //    private Collidable move() {
 //        int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));

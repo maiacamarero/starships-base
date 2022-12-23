@@ -5,6 +5,7 @@ import starships.collidable.Collidable;
 import starships.collidable.CollidableType;
 import starships.collidable.Collision;
 import starships.collidable.Vector;
+import starships.collidable.elements.Asteroid;
 import starships.collidable.elements.Bullet;
 import starships.collidable.elements.Ship;
 import starships.factories.AsteroidFactory;
@@ -14,22 +15,15 @@ import java.util.*;
 
 public class Juego {
 
-    private Map<String, Integer> points;
-    private List<String> deadElements;
+    private final Map<String, Integer> points;
+    private final List<String> deadElements;
 
-    private GameConfiguration configuration;
-    private State state;
+    private final GameConfiguration configuration;
+    private final State state;
 
     private boolean paused;
-    private boolean finished;
-    private AsteroidFactory asteroidFactory;
-
-    public Juego() {
-        deadElements = new ArrayList<>();
-        points = new HashMap<>();
-        configuration = new GameConfiguration();
-        finished  = false;
-    }
+    private final boolean finished;
+    private final AsteroidFactory asteroidFactory;
 
     public Juego(List<String> deadElements, Map<String, Integer> points, GameConfiguration configuration, State state, boolean paused, boolean finished) {
         this.deadElements = deadElements;
@@ -57,86 +51,118 @@ public class Juego {
         }
         return setState(newState);
     }
-    public Juego move1(String shipId, boolean accept){
-        State newState = null;
-        for (Collidable obj : state.getElements()){
-            if (obj.getId().equals(shipId) && !paused){
-                Ship ship = (Ship) obj;
-                newState = state.setCollidable(ship.move1(accept));
-                //newGameObjects.add(ship.move(up));
-            }
-            else {
-                newState = state.setCollidable(obj.getNewElementCollidable());
-                //newGameObjects.add(obj.getNewGameObject());
-            }
-        }
-        return setState(newState);
-        //refreshGameState(newGameObjects, getNewPlayers());
-    }
 
-    public Juego updateView() {
-        State newState = null;
-        List<Collidable> currentElements = state.getElements();
-        List<Collidable> asteroids;
-        Collidable newElement = null;
-        if (!paused && state != null) {
-//            AsteroidFactory.generate(state.getElements());
-//            for (Collidable element : state.getElements()) {
-//                if (element.getCollidableType() == CollidableType.SHIP){
-//                    Ship ship = (Ship) element;
-//                    Ship newShip = ship.update();
+//    public Juego updateView() {
+//        State newState = null;
+//        List<Collidable> currentElements = state.getElements();
+//        List<Collidable> asteroids;
+//        Collidable newElement = null;
+//        if (!paused) {
+////            AsteroidFactory.generate(state.getElements());
+////            for (Collidable element : state.getElements()) {
+////                if (element.getCollidableType() == CollidableType.SHIP){
+////                    Ship ship = (Ship) element;
+////                    Ship newShip = ship.update();
+////                    newState = state.setCollidable(newShip);
+////                } else if (element.getCollidableType() == CollidableType.BULLET) {
+////                    Bullet bullet = (Bullet) element;
+////                    Bullet newBullet = bullet.update();
+////                    newState = state.setCollidable(newBullet);
+////                }else if (element.getCollidableType() == CollidableType.ASTEROID){
+////                    Asteroid asteroid = (Asteroid) element;
+////                    Asteroid newAsteroid = asteroid.update();
+////                    newState = state.setCollidable(newAsteroid);
+////                }
+////            }
+//            boolean hasShip = false;
+//            boolean entered = false;
+//            asteroidFactory.generate(currentElements);
+//
+//            for (Collidable element : currentElements) {
+//                if (element.getCollidableType() == CollidableType.SHIP) {
+//                    hasShip = true;
+//                    //newState = state.setCollidable(element);
+//                    Collidable newShip = element.update();
 //                    newState = state.setCollidable(newShip);
-//                } else if (element.getCollidableType() == CollidableType.BULLET) {
-//                    Bullet bullet = (Bullet) element;
-//                    Bullet newBullet = bullet.update();
-//                    newState = state.setCollidable(newBullet);
-//                }else if (element.getCollidableType() == CollidableType.ASTEROID){
-//                    Asteroid asteroid = (Asteroid) element;
-//                    Asteroid newAsteroid = asteroid.update();
-//                    newState = state.setCollidable(newAsteroid);
+//                }
+//
+//                if (element.getCollidableType() != CollidableType.SHIP && !entered) {
+//                    asteroids = asteroidFactory.generate(currentElements);
+//                    for (Collidable asteroid : asteroids) {
+//                        newElement = asteroid.update();
+//                        break;
+//                    }
+//                    newState = state.setCollidable(newElement);
+//                    entered = true;
+//                }//else newState = state.setCollidable(element);
+//                //newState = state.setCollidable(element.update());
+//            }
+//            if (!hasShip) return setFinished(true);
+//            if (newState.getElements().size() == newState.getPlayers().size()) {
+//                asteroids = asteroidFactory.generate(currentElements);
+//                for (Collidable asteroid : asteroids) {
+//                    //if (element1.getCollidableType() == CollidableType.ASTEROID) {
+//                    //int i = 0;
+//                    //while (i < 20){
+//                        newState = state.setCollidable(asteroid);
+//                      //  i++;
+//                    //}
+//                        //newState = state.setCollidable(asteroid);
+//                    //}
 //                }
 //            }
+//        }
+//        return setState(newState);
+//
+//    }
+
+    public Juego update(){
+        State newState = null;
+        List<Collidable> asteroids;
+        if (!paused && state != null){
             boolean hasShip = false;
             boolean entered = false;
-
-            for (Collidable element : currentElements) {
-                if (element.getCollidableType() == CollidableType.SHIP) {
-                    hasShip = true;
-                    newState = state.setCollidable(element);
-                    Collidable newShip = element.update();
-                    newState = state.setCollidable(newShip);
-                }
-
-                if (element.getCollidableType() != CollidableType.SHIP && !entered) {
-                    asteroids = asteroidFactory.generate(currentElements);
+            for (Collidable gameObject : state.getElements()){
+                if (gameObject.getCollidableType() == CollidableType.SHIP) hasShip = true;
+                if (gameObject.getCollidableType() != CollidableType.SHIP && !entered){
+                    asteroids = manageMeteorSpawn(state);
                     for (Collidable asteroid : asteroids) {
-                        newElement = asteroid.update();
-                    }
-                    newState = state.setCollidable(newElement);
-                    entered = true;
-                }else newState = state.setCollidable(element);
-                //newState = state.setCollidable(element.update());
-            }
-            if (!hasShip) return setFinished(true);
-            if (newState.getElements().size() == newState.getPlayers().size()) {
-                asteroids = asteroidFactory.generate(currentElements);
-                for (Collidable asteroid : asteroids) {
-                    //if (element1.getCollidableType() == CollidableType.ASTEROID) {
-                    //int i = 0;
-                    //while (i < 20){
                         newState = state.setCollidable(asteroid);
-                      //  i++;
-                    //}
-                        //newState = state.setCollidable(asteroid);
-                    //}
+                    }
+                    entered = true;
+                }
+                Collidable newGameObject = gameObject.update();
+                if (newGameObject != null) newState = state.setCollidable(newGameObject);
+                else{
+                    addDeadElements(gameObject.getId());
+                }
+            }
+            if (!hasShip) hasFinished();
+            if (state.getElements().size() == state.getPlayers().size()){
+                assert newState != null;
+                asteroids = manageMeteorSpawn(state);
+                for (Collidable asteroid : asteroids) {
+                    newState = state.setCollidable(asteroid);
                 }
             }
         }
+
         return setState(newState);
+    }
+
+    private List<Collidable> manageMeteorSpawn(State state) {
+        List<Collidable> meteors = AsteroidFactory.generate(state.getElements());;
+        for (Collidable gameObject : state.getElements()){
+            if (gameObject.getCollidableType() == CollidableType.ASTEROID){
+                meteors.add(gameObject);
+            }
+        }
+
+        return meteors;
     }
 
     public Juego handleCollision(String id, String id2){
-        State newState;
+        State newState = null;
         Collision collision = new Collision();
         Collidable collidable = null;
         Collidable otherCollidable = null;
@@ -149,33 +175,25 @@ public class Juego {
             }
         }
         if (collidable != null && otherCollidable != null){
-            //return new Juego(Collision.handleCollision(collidable, otherCollidable, state, this));
-            newState = collision.handleCollision(collidable, otherCollidable, state, this);
-        }else {
-            //return new Juego(new State(getNewElements(), getNewPlayers()));
-            return setState(new State(getNewElements(), getNewPlayers()));
+            newState = (collision.handleCollision(collidable, otherCollidable, state, this));
         }
         return setState(newState);
     }
 
     public Juego rotate(String shipId, double rotationInDegrees){
         State newState = null;
-        //List<Collidable> newElements = new ArrayList<>();
         for (Collidable element : state.getElements()) {
             if (element.getId().equals(shipId) && !paused){
                 Ship ship = (Ship) element;
                 Ship newShip = ship.rotate(rotationInDegrees);
                 newState = state.setCollidable(newShip);
-                //newElements.add(newShip);
-            }//else newElements.add(element.getNewElementCollidable());
+            }
         }
-        //return new Juego(new State(newElements, getNewPlayers()));
         return setState(newState);
     }
 
     public Juego shoot(String shipId){
         BulletFactory bulletFactory = new BulletFactory();
-        //List<Collidable> newElements = new ArrayList<>();
         State newState = null;
         Ship ship = null;
         for (Collidable element : state.getElements()) {
@@ -183,20 +201,12 @@ public class Juego {
                 ship = (Ship) element;
                 if (ship.canShoot()){
                     newState = state.setCollidable(ship.shoot());
-                    //newElements.add(ship.shoot());
-                }//else {
-                newState = state.setCollidable(ship.getNewElementCollidable());
-                    //newElements.add(ship.getNewElementCollidable());
-                //}
-            }//else //{
-//                newState.setCollidable(element.getNewElementCollidable());
-//                //newElements.add(element.getNewElementCollidable());
-//            }
+                }
+            }
         }
         if (ship != null && ship.canShoot()){
             Bullet bullet = bulletFactory.generate(ship);
             newState = state.setCollidable(bullet);
-            //newElements.add(bulletFactory.generate(ship));
         }
         return setState(newState);
     }
@@ -255,6 +265,7 @@ public class Juego {
     }
 
     public void printLeaderBoard(){
+        loadPoints();
         if (state.getPlayers() != null){
             System.out.println("Tabla de Clasificación");
             points.forEach((key, value) -> System.out.println(key + " = " + value + " puntos."));
