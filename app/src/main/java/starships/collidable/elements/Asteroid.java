@@ -18,9 +18,7 @@ public class Asteroid extends Collidable {
     public Asteroid update(){
         int newX = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
         int newY = (int) (getPosition().getY() + 4 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
-//        int newX = (int) (getPosition().getX() + getSpeed() * getDirection().getX());
-//        int newY = (int) (getPosition().getY() + getSpeed() *  getDirection().getY());
-        double newRotationInDegrees = 0;
+        double newRotationInDegrees;
         Vector newPosition = new Vector(newX, newY);
 
         if (isInBounds()){

@@ -25,7 +25,7 @@ public class Bullet extends Collidable {
                 int newX = (getPosition().getX() + getDirection().getX());
                 int newY = (getPosition().getY() - getDirection().getY());
                 if (isInBounds()){
-                    return setPosition(new Vector(getPosition().getX() +10, getPosition().getY() + 10));
+                    return setPosition(new Vector(40, -45));
                 }//else return setIsVisible(false);
             //}
        // }

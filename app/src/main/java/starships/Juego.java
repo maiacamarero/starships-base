@@ -34,7 +34,6 @@ public class Juego {
     }
 
     public Juego setState(State state){
-
         return new Juego(getDeadElements(), getPoints(), getConfiguration(), state, isPaused(), isFinished());
     }
 
@@ -173,11 +172,11 @@ public class Juego {
     }
 
     public Juego setPaused(boolean paused){
-        return new Juego(deadElements,  points, configuration, state, paused, finished);
+        return new Juego(getDeadElements(),  getPoints(), getConfiguration(), getState(), paused, hasFinished());
     }
 
     public Juego setFinished(boolean finished){
-        return new Juego(deadElements,  points, configuration, state, paused, finished);
+        return new Juego(getDeadElements(),  getPoints(), getConfiguration(), getState(), isPaused(), finished);
     }
 
     public void saveGame(){

@@ -9,13 +9,12 @@ import java.util.List;
 import java.util.Random;
 
 public class AsteroidFactory {
-    private int counter;
     Random random = new Random();
 
     public List<Collidable> generate(List<Collidable> elements){
         List<Collidable> newElements = new ArrayList<>();
         int amountOfAsteroids = getAmountOfAsteroids(elements);
-        if (amountOfAsteroids < 10){
+        if (amountOfAsteroids < 7){
                 List<Ship> ships = getCurrentsShips(elements);
                 int x, y;
                 Ship target = getRandomShip(ships);
@@ -34,10 +33,10 @@ public class AsteroidFactory {
                     }
                     case 2 -> {
                         x = number;
-                        y = 794;
+                        y = 790;
                     }
                     default -> {
-                        x = 794;
+                        x = 790;
                         y = number;
                     }
                 }
@@ -54,7 +53,6 @@ public class AsteroidFactory {
 
     private Vector getDirection(int x, int y, Ship target) {
         return new Vector(target.getDirection().getX() - x + random.nextInt(20), target.getDirection().getY() - y + random.nextInt(20));
-        //return Math.toDegrees(Math.atan2(target.getPosition().getX() - x, target.getPosition().getY() - y)) + random.nextDouble(20);
     }
 
     private List<Ship> getCurrentsShips(List<Collidable> elements) {

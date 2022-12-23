@@ -1,8 +1,5 @@
 package starships.collidable;
 
-import starships.collidable.elements.Asteroid;
-import starships.collidable.elements.Ship;
-
 public class Collidable {
 
     private final String id;
@@ -113,12 +110,6 @@ public class Collidable {
         }else return false;
     }
 
-//    public boolean isInBounds(){
-//        if (getPosition().getX() > 0 && getPosition().getX() < 800 && getPosition().getY() > 0 && getPosition().getY() < 800){
-//            return true;
-//        }else return false;
-//    }
-
     public boolean isInBounds(){
         if ((getPosition().getX() > (0-getHeight())) && (getPosition().getX()<(800+getHeight())) && (getPosition().getY() > (0-getHeight())) && (getPosition().getX()<(800+getHeight()))){
             return true;
@@ -130,12 +121,17 @@ public class Collidable {
     }
 
     public Collidable update(){
-        int newX = (int) (getPosition().getX() - 3.5 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
-        int newY = (int) (getPosition().getY() + 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
+//        int newX = (int) (getPosition().getX() - 3.5 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
+//        int newY = (int) (getPosition().getY() + 3.5 * Math.cos(Math.PI * 2 * getDirection().getY() / 360));
+        int newX = (int) (getPosition().getX() + getSpeed() * getDirection().getX());
+        int newY = (int) (getPosition().getY() + getSpeed() * getDirection().getY());
         if (collidableType == CollidableType.SHIP){
-            if (speed > 0 && !isInsideLimit(newX, newY)){
-                    return setSpeed(0.0);
-            }else return setSpeed(-5);
+            if (getSpeed() > 0){
+                if (isInsideLimit(newX, newY)){
+                    return setPosition(new Vector(newX, newY));
+                }else return setIsVisible(false);
+            }
+            return this;
 
         }else if (collidableType == CollidableType.ASTEROID){
             int newX1 = (int) (getPosition().getX() - 4 * Math.sin(Math.PI * 2 * getDirection().getX() / 360));
@@ -159,7 +155,7 @@ public class Collidable {
     }
 
     public boolean isInsideLimit(int x, int y){
-        return x > 0 && x < 725 && y > 0 && y < 700;
+        return x > 0 && x < 300 && y > 0 && y < 500;
     }
     public boolean isInsideLimit(){
         return getPosition().getX() > 0 && getPosition().getX() < 800 && getPosition().getY() > 0 && getPosition().getY() < 800;

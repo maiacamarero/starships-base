@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class BulletFactory {
 
-    private static int counter = 0;
+    private int counter = 0;
 
     public Bullet generate(Ship ship){
         String id = "bullet-" + counter++;
